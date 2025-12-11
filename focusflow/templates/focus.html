@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="focus-page-container">
+    <!-- Page Header -->
+    <div class="focus-page-header">
+        <h1 class="focus-page-title">Study Timer</h1>
+        <p class="focus-page-subtitle">Use the Pomodoro technique to boost your focus</p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="focus-content-grid">
+        <!-- Left Column: Focus Time Card -->
+        <div class="focus-main-card">
+            <div class="focus-card-header">
+                <h2 class="focus-card-title">Focus Time</h2>
+                <p class="focus-card-subtitle">Stay focused on your study session</p>
+            </div>
+            
+            <!-- Large Circular Timer -->
+            <div class="timer-circle-container">
+                <div class="timer-circle">
+                    <span class="timer-display" id="timerDisplay">25:00</span>
+                </div>
+            </div>
+
+            <!-- Subject Selection -->
+            <div class="subject-selector">
+                <label for="subject-select" class="subject-label">Select Subject</label>
+                <select id="subject-select" class="subject-dropdown">
+                    <option value="">Choose a subject</option>
+                    {% if tasks %}
+                        {% for task in tasks %}
+                            {% if task.course %}
+                            <option value="{{ task.course }}">{{ task.course }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+
+            <!-- Control Buttons -->
+            <div class="timer-controls">
+                <button class="btn-start-timer" id="startBtn">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="btn-reset-timer" id="resetBtn" title="Reset">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+
+            <!-- Preset Time Buttons -->
+            <div class="preset-times">
+                <button class="preset-btn active" data-minutes="25">25 min</button>
+                <button class="preset-btn" data-minutes="45">45 min</button>
+                <button class="preset-btn" data-minutes="60">60 min</button>
+            </div>
+        </div>
+
+        <!-- Right Column: Stats Cards -->
+        <div class="focus-stats-column">
+            <!-- Today's Progress Card -->
+            <div class="focus-stat-card">
+                <h3 class="stat-card-title">Today's Progress</h3>
+                <div class="stat-card-content">
+                    <div class="stat-large-value" id="todayProgress">{{ today_progress|default('0h 0m') }}</div>
+                    <p class="stat-card-description">Total study time</p>
+                </div>
+            </div>
+
+            <!-- How it works Card -->
+            <div class="focus-stat-card">
+                <h3 class="stat-card-title">How it works</h3>
+                <div class="how-it-works-list">
+                    <div class="how-it-works-item">
+                        <div class="step-number">1</div>
+                        <p>Choose a subject and set your focus time</p>
+                    </div>
+                    <div class="how-it-works-item">
+                        <div class="step-number">2</div>
+                        <p>Work with full concentration until the timer ends</p>
+                    </div>
+                    <div class="how-it-works-item">
+                        <div class="step-number">3</div>
+                        <p>Take a short break to recharge</p>
+                    </div>
+                    <div class="how-it-works-item">
+                        <div class="step-number">4</div>
+                        <p>Repeat the cycle to build momentum</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/focus_timer.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize timer
+    let timer = null;
+    let remainingTime = 25 * 60; // 25 minutes in seconds
+    let isRunning = false;
+    let timerInterval = null;
+    let selectedMinutes = 25;
+
+    const timerDisplay = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    const todayProgressEl = document.getElementById('todayProgress');
+
+    // Update timer display
+    function updateDisplay() {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Start/Pause timer
+    startBtn.addEventListener('click', function() {
+        if (!isRunning) {
+            isRunning = true;
+            startBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            startBtn.classList.add('paused');
+            
+            timerInterval = setInterval(function() {
+                remainingTime--;
+                updateDisplay();
+                
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+                    startBtn.classList.remove('paused');
+                    
+                    // Save session
+                    saveFocusSession();
+                    
+                    // Show notification
+                    showNotification('Focus session completed! Great job!');
+                    
+                    // Reset to selected time
+                    remainingTime = selectedMinutes * 60;
+                    updateDisplay();
+                }
+            }, 1000);
+        } else {
+            // Pause
+            isRunning = false;
+            clearInterval(timerInterval);
+            startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+            startBtn.classList.remove('paused');
+        }
+    });
+
+    // Reset timer
+    resetBtn.addEventListener('click', function() {
+        isRunning = false;
+        clearInterval(timerInterval);
+        remainingTime = selectedMinutes * 60;
+        updateDisplay();
+        startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+        startBtn.classList.remove('paused');
+    });
+
+    // Preset time buttons
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            presetBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            selectedMinutes = parseInt(this.dataset.minutes);
+            
+            if (!isRunning) {
+                remainingTime = selectedMinutes * 60;
+                updateDisplay();
+            }
+        });
+    });
+
+    // Save focus session
+    function saveFocusSession() {
+        const subject = document.getElementById('subject-select').value;
+        const duration = selectedMinutes;
+        
+        fetch('/focus/save_session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                duration: duration,
+                subject: subject
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateTodayProgress();
+            }
+        })
+        .catch(error => {
+            console.error('Error saving session:', error);
+        });
+    }
+
+    // Update today's progress
+    function updateTodayProgress() {
+        fetch('/focus/stats')
+            .then(response => response.json())
+            .then(data => {
+                const hours = Math.floor(data.today_duration / 60);
+                const minutes = data.today_duration % 60;
+                if (hours > 0) {
+                    todayProgressEl.textContent = `${hours}h ${minutes}m`;
+                } else {
+                    todayProgressEl.textContent = `${minutes}m`;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching stats:', error);
+            });
+    }
+
+    // Initialize today's progress
+    updateTodayProgress();
+    
+    // Update every minute
+    setInterval(updateTodayProgress, 60000);
+});
+</script>
+{% endblock %}

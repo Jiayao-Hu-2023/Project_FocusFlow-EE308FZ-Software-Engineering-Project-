@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{ _('专注模式') }}{% endblock %}
+{% block content %}
+<div class="container focus-container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header text-center bg-primary text-white">
+                    <h2>{{ _('专注模式') }}</h2>
+                    <p id="session-type" class="h4">{{ _('学习时间') }}</p>
+                </div>
+                <div class="card-body text-center">
+                    <!-- 计时器显示 -->
+                    <div class="timer-container mb-4">
+                        <div id="timer" class="h1">25:00</div>
+                    </div>
+                    
+                    <!-- 任务选择器 -->
+                    <div class="task-selector mb-4">
+                        <label for="task-select">{{ _('选择任务：') }}</label>
+                        <select id="task-select" class="form-control">
+                            <option value="">{{ _('无特定任务') }}</option>
+                            {% for task in tasks %}
+                            <option value="{{ task.id }}">{{ task.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- 时间设置 -->
+                    <div class="time-settings mb-4">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <label for="focus-time">{{ _('专注时长（分钟）：') }}</label>
+                                <input type="number" id="focus-time" class="form-control" value="25" min="5" max="120">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="break-time">{{ _('休息时长（分钟）：') }}</label>
+                                <input type="number" id="break-time" class="form-control" value="5" min="1" max="30">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 控制按钮 -->
+                    <div class="control-buttons">
+                        <button id="start-btn" class="btn btn-success btn-lg mr-2">
+                            <i class="fas fa-play"></i> {{ _('开始') }}
+                        </button>
+                        <button id="pause-btn" class="btn btn-warning btn-lg mr-2" disabled>
+                            <i class="fas fa-pause"></i> {{ _('暂停') }}
+                        </button>
+                        <button id="reset-btn" class="btn btn-danger btn-lg" disabled>
+                            <i class="fas fa-redo-alt"></i> {{ _('重置') }}
+                        </button>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <div class="session-info">
+                        <p>{{ _('今日专注时长：') }} <span id="today-total">0分钟</span></p>
+                        <p>{{ _('当前循环：') }} <span id="current-cycle">1/4</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 专注时背景 -->
+    <div id="focus-background" class="focus-background hidden">
+        <div class="focus-overlay"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/focus_timer.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const timer = new FocusTimer();
+        timer.initialize();
+    });
+</script>
+{% endblock %}
