@@ -1,0 +1,13 @@
+// ... existing code ...
+
+<!-- 用户菜单区域 -->
+<div class="user-menu">
+    <div class="user-avatar" style="background-color: {{ g.user_avatar_color if g.user_avatar_color else '#4a6fa5' }};">
+        {{ g.initials if g.initials else '用户' }}
+    </div>
+    <div class="user-info">
+        <span class="user-name">{{ g.initials if g.initials else '用户' }}</span>
+    </div>
+</div>
+
+// ... existing code ...

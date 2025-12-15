@@ -1,0 +1,260 @@
+msgid "FocusFlow"
+msgstr "专注流"
+
+msgid "专注模式"
+msgstr "专注模式"
+
+msgid "学习时间"
+msgstr "学习时间"
+
+msgid "开始"
+msgstr "开始"
+
+msgid "暂停"
+msgstr "暂停"
+
+msgid "重置"
+msgstr "重置"
+
+msgid "今日专注时长："
+msgstr "今日专注时长："
+
+msgid "当前循环："
+msgstr "当前循环："
+
+msgid "分钟"
+msgstr "分钟"
+
+msgid "选择任务："
+msgstr "选择任务："
+
+msgid "无特定任务"
+msgstr "无特定任务"
+
+msgid "专注时长（分钟）："
+msgstr "专注时长（分钟）："
+
+msgid "休息时长（分钟）："
+msgstr "休息时长（分钟）："
+
+msgid "统计与反馈"
+msgstr "统计与反馈"
+
+msgid "学习统计与反馈"
+msgstr "学习统计与反馈"
+
+msgid "选择时间段："
+msgstr "选择时间段："
+
+msgid "今天"
+msgstr "今天"
+
+msgid "本周"
+msgstr "本周"
+
+msgid "本月"
+msgstr "本月"
+
+msgid "自定义"
+msgstr "自定义"
+
+msgid "日期范围："
+msgstr "日期范围："
+
+msgid "至"
+msgstr "至"
+
+msgid "应用"
+msgstr "应用"
+
+msgid "总专注时长"
+msgstr "总专注时长"
+
+msgid "完成任务数"
+msgstr "完成任务数"
+
+msgid "专注会话数"
+msgstr "专注会话数"
+
+msgid "连续打卡天数"
+msgstr "连续打卡天数"
+
+msgid "每日专注时长趋势"
+msgstr "每日专注时长趋势"
+
+msgid "任务类型分布"
+msgstr "任务类型分布"
+
+msgid "学习效率评估"
+msgstr "学习效率评估"
+
+msgid "您的学习效率评分"
+msgstr "您的学习效率评分"
+
+msgid "个性化建议"
+msgstr "个性化建议"
+
+msgid "最近活动记录"
+msgstr "最近活动记录"
+
+msgid "日期"
+msgstr "日期"
+
+msgid "类型"
+msgstr "类型"
+
+msgid "内容"
+msgstr "内容"
+
+msgid "时长/状态"
+msgstr "时长/状态"
+
+msgid "登录"
+msgstr "登录"
+
+msgid "注册"
+msgstr "注册"
+
+msgid "用户名"
+msgstr "用户名"
+
+msgid "密码"
+msgstr "密码"
+
+msgid "记住我"
+msgstr "记住我"
+
+msgid "忘记密码？"
+msgstr "忘记密码？"
+
+msgid "请输入用户名"
+msgstr "请输入用户名"
+
+msgid "请输入密码"
+msgstr "请输入密码"
+
+msgid "用户仪表盘"
+msgstr "用户仪表盘"
+
+msgid "个人中心"
+msgstr "个人中心"
+
+msgid "任务管理"
+msgstr "任务管理"
+
+msgid "退出登录"
+msgstr "退出登录"
+
+msgid "欢迎回来，"
+msgstr "欢迎回来，"
+
+msgid "今天的目标"
+msgstr "今天的目标"
+
+msgid "添加新任务"
+msgstr "添加新任务"
+
+msgid "任务标题"
+msgstr "任务标题"
+
+msgid "任务描述"
+msgstr "任务描述"
+
+msgid "优先级"
+msgstr "优先级"
+
+msgid "低"
+msgstr "低"
+
+msgid "中"
+msgstr "中"
+
+msgid "高"
+msgstr "高"
+
+msgid "截止日期"
+msgstr "截止日期"
+
+msgid "任务类型"
+msgstr "任务类型"
+
+msgid "保存"
+msgstr "保存"
+
+msgid "取消"
+msgstr "取消"
+
+msgid "编辑个人资料"
+msgstr "编辑个人资料"
+
+msgid "电子邮箱"
+msgstr "电子邮箱"
+
+msgid "学习目标"
+msgstr "学习目标"
+
+msgid "学习偏好"
+msgstr "学习偏好"
+
+msgid "更新密码"
+msgstr "更新密码"
+
+msgid "当前密码"
+msgstr "当前密码"
+
+msgid "新密码"
+msgstr "新密码"
+
+msgid "确认新密码"
+msgstr "确认新密码"
+
+msgid "更新资料"
+msgstr "更新资料"
+
+msgid "修改密码"
+msgstr "修改密码"
+
+msgid "忘记密码"
+msgstr "忘记密码"
+
+msgid "重置密码"
+msgstr "重置密码"
+
+msgid "请输入您的电子邮箱"
+msgstr "请输入您的电子邮箱"
+
+msgid "发送重置链接"
+msgstr "发送重置链接"
+
+msgid "设置新密码"
+msgstr "设置新密码"
+
+msgid "确认密码"
+msgstr "确认密码"
+
+msgid "提交"
+msgstr "提交"
+
+msgid "语言"
+msgstr "语言"
+
+msgid "中文"
+msgstr "中文"
+
+msgid "English"
+msgstr "英文"
+
+msgid "Dark Mode"
+msgstr "深色模式"
+
+msgid "Light Mode"
+msgstr "浅色模式"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "about"
+msgstr "关于"
+
+msgid "help"
+msgstr "帮助"

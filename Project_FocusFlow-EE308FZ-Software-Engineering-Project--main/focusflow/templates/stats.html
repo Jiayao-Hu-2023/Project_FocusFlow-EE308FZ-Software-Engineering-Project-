@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% block title %}{{ _('统计与反馈') }}{% endblock %}
+{% block content %}
+<div class="container stats-container mt-5">
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <h2 class="text-center">{{ _('学习统计与反馈') }}</h2>
+        </div>
+        
+        <!-- 时间过滤 -->
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-md-4">
+                            <label for="date-filter">{{ _('选择时间段：') }}</label>
+                            <select id="date-filter" class="form-control">
+                                <option value="today">{{ _('今天') }}</option>
+                                <option value="week" selected>{{ _('本周') }}</option>
+                                <option value="month">{{ _('本月') }}</option>
+                                <option value="custom">{{ _('自定义') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4" id="custom-date-range" style="display: none;">
+                            <label>{{ _('日期范围：') }}</label>
+                            <div class="input-group">
+                                <input type="date" id="start-date" class="form-control">
+                                <span class="input-group-text">{{ _('至') }}</span>
+                                <input type="date" id="end-date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <button id="apply-filter" class="btn btn-primary w-100">{{ _('应用') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 关键指标卡片 -->
+        <div class="col-md-12 mb-4">
+            <div class="row">
+                <div class="col-md-3 mb-2">
+                    <div class="card bg-primary text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ _('总专注时长') }}</h5>
+                            <p class="card-text h2">{{ stats.total_focus_time }} {{ _('分钟') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card bg-success text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ _('完成任务数') }}</h5>
+                            <p class="card-text h2">{{ stats.completed_tasks }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card bg-warning text-dark h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ _('专注会话数') }}</h5>
+                            <p class="card-text h2">{{ stats.focus_sessions }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="card bg-info text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ _('连续打卡天数') }}</h5>
+                            <p class="card-text h2">{{ stats.streak_days }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 图表区域 -->
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">{{ _('每日专注时长趋势') }}</div>
+                <div class="card-body">
+                    <canvas id="dailyChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">{{ _('任务类型分布') }}</div>
+                <div class="card-body">
+                    <canvas id="taskTypeChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">{{ _('学习效率评估') }}</div>
+                <div class="card-body">
+                    <div class="progress mb-4">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ stats.productivity_score }}%" aria-valuenow="{{ stats.productivity_score }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ stats.productivity_score }}%
+                        </div>
+                    </div>
+                    <p class="text-center">{{ _('您的学习效率评分') }}</p>
+                    
+                    <div class="feedback-section mt-4">
+                        <h5>{{ _('个性化建议') }}</h5>
+                        <ul class="list-group">
+                            {% for tip in tips %}
+                            <li class="list-group-item">{{ tip }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 最近活动记录 -->
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">{{ _('最近活动记录') }}</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{{ _('日期') }}</th>
+                                    <th>{{ _('类型') }}</th>
+                                    <th>{{ _('内容') }}</th>
+                                    <th>{{ _('时长/状态') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for activity in recent_activities %}
+                                <tr>
+                                    <td>{{ activity.date }}</td>
+                                    <td>
+                                        <span class="badge" style="background-color: {{ activity.type_color }}">
+                                            {{ activity.type }}
+                                        </span>
+                                    </td>
+                                    <td>{{ activity.content }}</td>
+                                    <td>{{ activity.duration }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 日期过滤器
+        const dateFilter = document.getElementById('date-filter');
+        const customDateRange = document.getElementById('custom-date-range');
+        const today = new Date().toISOString().split('T')[0];
+        
+        document.getElementById('start-date').value = today;
+        document.getElementById('end-date').value = today;
+        
+        dateFilter.addEventListener('change', function() {
+            if (this.value === 'custom') {
+                customDateRange.style.display = 'block';
+            } else {
+                customDateRange.style.display = 'none';
+            }
+        });
+        
+        // 每日专注时长图表
+        const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+        const dailyChart = new Chart(dailyCtx, {
+            type: 'line',
+            data: {
+                labels: {{ chart_data.daily_labels | safe }},
+                datasets: [{
+                    label: '{{ _('专注时长（分钟）') }}',
+                    data: {{ chart_data.daily_data | safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // 任务类型分布图表
+        const taskTypeCtx = document.getElementById('taskTypeChart').getContext('2d');
+        const taskTypeChart = new Chart(taskTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: {{ chart_data.task_type_labels | safe }},
+                datasets: [{
+                    data: {{ chart_data.task_type_data | safe }},
+                    backgroundColor: {{ chart_data.colors | safe }},
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    }
+                }
+            }
+        });
+        
+        // 应用过滤器
+        document.getElementById('apply-filter').addEventListener('click', function() {
+            // 这里可以添加AJAX请求来更新统计数据
+            console.log('应用过滤器:', dateFilter.value);
+        });
+    });
+</script>
+{% endblock %}
