@@ -1534,4 +1534,5 @@ if __name__ == '__main__':
         print("[调试] 数据库文件不存在，正在初始化...")
         init_db()
     print("[调试] 应用启动成功，运行在debug模式")
+
     app.run(debug=True)
