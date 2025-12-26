@@ -137,11 +137,16 @@ def before_request():
         try:
             user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
             if user:
+                # 添加调试信息，显示用户的具体姓名信息
+                print(f"[调试] 用户ID: {session['user_id']}")
+                print(f"[调试] 用户信息: {dict(user)}")
+                
                 # 调用generate_avatar_data函数生成头像数据
                 initials, user_avatar_color = generate_avatar_data(user)
                 # 将头像数据添加到g对象，使其在所有模板中可用
                 g.initials = initials
                 g.user_avatar_color = user_avatar_color
+                print(f"[调试] 生成的头像字母: {initials}")
 
                 # 添加用户真实姓名到g对象
                 try:
@@ -149,21 +154,25 @@ def before_request():
                     first_name = ''
                     last_name = ''
 
-                    # 安全地获取名字和姓氏，兼容字典式和属性式访问
-                    if hasattr(user, '__contains__') and 'first_name' in user and user['first_name']:
+                    # 方法1：直接尝试字典式访问（适用于sqlite3.Row对象）
+                    try:
+                        # 直接访问字段，如果不存在会抛出KeyError
                         first_name = str(user['first_name']).strip()
-                    elif hasattr(user, 'first_name') and user.first_name:
-                        first_name = str(user.first_name).strip()
-
-                    if hasattr(user, '__contains__') and 'last_name' in user and user['last_name']:
                         last_name = str(user['last_name']).strip()
-                    elif hasattr(user, 'last_name') and user.last_name:
-                        last_name = str(user.last_name).strip()
-
-                    # 组合成完整姓名（中文名字通常姓在前名在后，英文名字名在前姓在后）
-                    # 这里我们简单地将姓和名连接起来
+                        print(f"[调试] before_request: 字典式访问成功 - 名字: '{first_name}', 姓氏: '{last_name}'")
+                    except (KeyError, TypeError) as e:
+                        print(f"[调试] before_request: 字典式访问失败: {str(e)}，尝试属性式访问")
+                        # 方法2：属性式访问（适用于对象）
+                        if hasattr(user, 'first_name'):
+                            first_name = str(getattr(user, 'first_name', '')).strip()
+                        if hasattr(user, 'last_name'):
+                            last_name = str(getattr(user, 'last_name', '')).strip()
+                        print(f"[调试] before_request: 属性式访问结果 - 名字: '{first_name}', 姓氏: '{last_name}'")
+                    
+                    # 组合成完整姓名
                     g.user_name = f"{first_name} {last_name}".strip() if first_name or last_name else "User"
-                except Exception:
+                except Exception as e:
+                    print(f"[调试] 获取用户姓名时出错: {str(e)}")
                     g.user_name = "User"
                 
                 # 计算总学习时间
@@ -182,11 +191,10 @@ def before_request():
                         g.total_study_time = f"{hours}h {minutes}m"
                     else:
                         g.total_study_time = f"{minutes}m"
-                except Exception:
-                    g.total_study_time = "0h 0m"
-        except Exception:
-            # 发生错误时不做处理，让模板使用默认值
-            pass
+                except Exception as e:
+                    print(f"[调试] before_request出错: {str(e)}")
+                    # 发生错误时不做处理，让模板使用默认值
+                    pass
         finally:
             conn.close()
 
@@ -389,6 +397,80 @@ def forgot_password():
             conn.close()
 
     return render_template('forgot_password.html', translations=translations, lang=lang)
+
+# 路由：验证手机号（AJAX接口）
+@app.route('/verify_phone', methods=['POST'])
+def verify_phone():
+    print("[调试] 验证手机号")
+    data = request.get_json()
+    phone = data.get('phone')
+    
+    if not phone:
+        return jsonify({'success': False, 'message': 'Phone number is required'})
+    
+    conn = get_db_connection()
+    try:
+        print(f"[调试] 查询手机号: {phone}")
+        user = conn.execute('SELECT * FROM users WHERE phone = ?', (phone,)).fetchone()
+        
+        if user:
+            print("[调试] 找到用户，返回用户信息")
+            return jsonify({
+                'success': True,
+                'user': {
+                    'phone': user['phone'],
+                    'first_name': user['first_name'],
+                    'last_name': user['last_name'],
+                    'school': user['school'],
+                    'email': user['email']
+                }
+            })
+        else:
+            print("[调试] 未找到用户")
+            return jsonify({'success': False, 'message': 'Phone number not found. Please check and try again.'})
+    except Exception as e:
+        print(f"[调试] 验证手机号时出现错误: {str(e)}")
+        return jsonify({'success': False, 'message': 'An error occurred. Please try again.'})
+    finally:
+        conn.close()
+
+# 路由：重置密码（AJAX接口）
+@app.route('/reset_password', methods=['POST'])
+def reset_password():
+    print("[调试] 重置密码")
+    data = request.get_json()
+    phone = data.get('phone')
+    new_password = data.get('new_password')
+    confirm_password = data.get('confirm_password')
+    
+    if not phone or not new_password or not confirm_password:
+        return jsonify({'success': False, 'message': 'All fields are required'})
+    
+    if new_password != confirm_password:
+        return jsonify({'success': False, 'message': 'Passwords do not match'})
+    
+    conn = get_db_connection()
+    try:
+        print(f"[调试] 查询用户: {phone}")
+        user = conn.execute('SELECT * FROM users WHERE phone = ?', (phone,)).fetchone()
+        
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'})
+        
+        print("[调试] 加密新密码")
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        
+        print("[调试] 更新密码")
+        conn.execute('UPDATE users SET password = ? WHERE phone = ?', (hashed_password, phone))
+        conn.commit()
+        
+        print("[调试] 密码重置成功")
+        return jsonify({'success': True, 'message': 'Password reset successfully'})
+    except Exception as e:
+        print(f"[调试] 重置密码时出现错误: {str(e)}")
+        return jsonify({'success': False, 'message': 'Password reset failed. Please try again.'})
+    finally:
+        conn.close()
 
 
 
@@ -1534,5 +1616,4 @@ if __name__ == '__main__':
         print("[调试] 数据库文件不存在，正在初始化...")
         init_db()
     print("[调试] 应用启动成功，运行在debug模式")
-
     app.run(debug=True)

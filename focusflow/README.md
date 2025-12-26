@@ -1,363 +1,250 @@
-# FocusFlow - 专注学习与时间管理系统
+# FocusFlow - Focus Learning & Time Management System
 
-## 📚 项目介绍
-FocusFlow是一款基于Flask的专注学习与时间管理系统，旨在帮助用户提高学习效率，培养良好的学习习惯。通过结合番茄工作法和任务管理功能，FocusFlow为用户提供了一个全面的学习效率提升解决方案。
+## 📚 Project Overview
+FocusFlow is a Flask-based focus learning and time management system designed to help users improve learning efficiency and develop good study habits. By combining the Pomodoro technique with task management functionality, FocusFlow provides a comprehensive solution for enhancing learning productivity.
 
-## ✨ 功能特性
+## ✨ Key Features
 
-### 👤 用户账户系统
-- 注册、登录、密码重置功能
-- 个人资料管理（编辑个人信息、修改密码）
-- 学习偏好设置
+### 👤 User Account System
+- Registration, login, and password reset functionality
+- Personal profile management (edit information, change password)
+- Learning preference settings
 
-### 📝 任务管理
-- 创建、编辑、删除学习任务
-- 设置任务优先级和截止日期
-- 任务分类管理
-- 任务完成状态追踪
+### 📝 Task Management
+- Create, edit, and delete learning tasks
+- Set task priority and due dates
+- Task categorization and organization
+- Task completion status tracking
 
-### ⏱️ 专注模式
-- 番茄工作法计时器
-- 自定义专注时长和休息时长
-- 专注会话记录与统计
-- 专注时视觉干扰最小化
+### ⏱️ Focus Mode
+- Pomodoro technique timer implementation
+- Customizable focus and break durations
+- Focus session recording and statistics
+- Visual distraction minimization during focus sessions
 
-### 📊 统计与反馈
-- 学习数据可视化展示
-- 每日/每周/每月专注时长统计
-- 任务完成率分析
-- 个性化学习建议
-- 连续学习打卡记录
+### 📊 Statistics & Analytics
+- Learning data visualization
+- Daily/weekly/monthly focus time statistics
+- Task completion rate analysis
+- Personalized learning recommendations
+- Continuous learning streak tracking
 
-### 🌐 国际化支持
-- 中英文双语界面切换
-- 多语言内容翻译
+### 🌐 Internationalization Support
+- Bilingual interface (English/Chinese)
+- Multi-language content translation
 
-### 🎨 用户体验优化
-- 响应式设计，适配不同设备屏幕
-- 深色/浅色模式切换
-- 直观友好的用户界面
+### 🎨 User Experience Optimization
+- Responsive design for various screen sizes
+- Dark/light mode theme switching
+- Intuitive and user-friendly interface
 
-## 🛠️ 技术栈
+## 🛠️ Technology Stack
 
-### 后端
+### Backend
 - Python 3.12
-- Flask 3.1.2 - Web框架
-- SQLite3 - 轻量级数据库
-- Flask-CORS 6.0.1 - 跨域资源共享
+- Flask 3.1.2 - Web framework
+- SQLite3 - Lightweight database
+- Flask-CORS 6.0.1 - Cross-origin resource sharing
 
-### 前端
+### Frontend
 - HTML5, CSS3, JavaScript ES6+
-- Bootstrap 5 - 响应式UI框架
-- Font Awesome - 图标库
-- Chart.js - 数据可视化
+- Bootstrap 5 - Responsive UI framework
+- Font Awesome - Icon library
+- Chart.js - Data visualization
 
-## 🚀 安装与配置
+## 🚀 Installation & Setup
 
-### 环境要求
-- Python 3.8 或更高版本
-- pip 包管理器
-- 浏览器支持：Chrome 90+、Firefox 88+、Safari 14+、Edge 90+
+### Prerequisites
+- Python 3.8 or higher
+- pip package manager
+- Browser support: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
 
-### 安装步骤
+### Installation Steps
 
-#### 1. 克隆项目（或直接使用已有文件）
+#### 1. Clone the project (or use existing files)
 
-#### 2. 创建并激活虚拟环境
+#### 2. Create and activate virtual environment
+If you are using Windows, enter the command prompt in the terminal:
 ```bash
-# Windows系统
+# Windows
 python -m venv .venv
 .venv\Scripts\activate
+```
 
-# macOS/Linux系统
+If you are using macOS or Linux, enter the command prompt in the terminal:
+```bash
+# macOS/Linux
 source .venv/bin/activate
 ```
 
-#### 3. 安装依赖
+#### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. 初始化数据库
+#### 4. Initialize database
 ```bash
 cd focusflow
 python setup.py
 ```
 
-#### 5. 编译翻译文件（可选）
+#### 5. Compile translation files (optional)
 ```bash
-# 如需更新或添加新的翻译
+# To update or add new translations
 pybabel compile -d translations
 ```
 
-#### 6. 运行应用
+#### 6. Run the application
 ```bash
-# 开发模式运行
+# Development mode
 flask run
 
-# 或使用WSGI入口
+# Or using WSGI entry point
 python wsgi.py
 ```
 
-应用将在 http://127.0.0.1:5000 启动
+The application will start at http://127.0.0.1:5000
 
-## 📋 使用指南
+## 📋 User Guide
 
-### 首次使用
-1. 访问 http://127.0.0.1:5000 打开应用
-2. 点击"注册"创建新账户
-3. 使用注册的账户登录系统
+### First-time Usage
+1. Visit http://127.0.0.1:5000 to open the application
+2. Click "Register" to create a new account
+3. Log in using your registered credentials
 
-### 核心功能使用
+### Core Features Usage
 
-#### 任务管理
-1. 在左侧导航栏点击"任务管理"
-2. 点击"添加新任务"创建学习任务
-3. 填写任务标题、描述、优先级等信息
-4. 点击"保存"完成任务创建
-5. 可以在任务列表中编辑或删除任务
+#### Task Management
+1. Click "Task Management" in the left navigation bar
+2. Click "Add New Task" to create a learning task
+3. Fill in task title, description, priority, etc.
+4. Click "Save" to complete task creation
+5. Edit or delete tasks from the task list
 
-#### 专注模式
-1. 在左侧导航栏点击"专注模式"
-2. 选择要专注的任务（可选）
-3. 设置专注时长和休息时长
-4. 点击"开始"按钮开始专注计时
-5. 专注结束后会自动进入休息模式
+#### Focus Mode
+1. Click "Focus Mode" in the left navigation bar
+2. Select a task to focus on (optional)
+3. Set focus duration and break duration
+4. Click "Start" to begin the focus timer
+5. Automatically switches to break mode after focus session
 
-#### 统计与反馈
-1. 在左侧导航栏点击"统计与反馈"
-2. 查看学习统计数据和可视化图表
-3. 选择不同的时间段查看统计结果
-4. 阅读系统提供的个性化学习建议
+#### Statistics & Analytics
+1. Click "Statistics & Analytics" in the left navigation bar
+2. View learning statistics and visual charts
+3. Select different time periods for statistics
+4. Read personalized learning recommendations
 
-#### 个人中心
-1. 在左侧导航栏点击"个人中心"
-2. 编辑个人信息和学习目标
-3. 修改账户密码
-4. 设置语言偏好和主题模式
+#### Personal Center
+1. Click "Personal Center" in the left navigation bar
+2. Edit personal information and learning goals
+3. Change account password
+4. Set language preferences and theme mode
 
-## 📁 项目结构
+## 📁 Project Structure
 ```
-focussflow/
-├── app.py                 # 应用主入口和路由定义
-├── config.py              # 应用配置文件
-├── models.py              # 数据模型定义
-├── database.py            # 数据库操作函数
-├── schema.sql             # 数据库表结构定义
-├── setup.py               # 项目初始化脚本
-├── wsgi.py                # WSGI服务器入口
-├── static/                # 静态资源文件
-│   ├── css/               # 样式文件
-│   │   └── style.css      # 主样式表
-│   ├── js/                # JavaScript脚本
-│   │   ├── focus_timer.js # 专注计时器实现
-│   │   └── main.js        # 公共脚本功能
-│   └── sounds/            # 音频文件（提示音）
-├── templates/             # HTML模板文件
-│   ├── base.html          # 基础模板
-│   ├── dashboard.html     # 用户仪表盘
-│   ├── focus_session.html # 专注模式页面
-│   ├── forgot_password.html # 忘记密码页面
-│   ├── login.html         # 登录页面
-│   ├── profile.html       # 个人中心页面
-│   ├── register.html      # 注册页面
-│   ├── stats.html         # 统计与反馈页面
-│   └── tasks.html         # 任务管理页面
-├── translations/          # 多语言翻译文件
-│   └── zh/                # 中文翻译
-│       └── LC_MESSAGES/   # 消息目录
-│           └── messages.po # 翻译文件
-└── utils/                 # 工具函数
-    ├── auth.py            # 认证相关功能
-    └── helpers.py         # 辅助函数
+focusflow/
+├── app.py                 # Main application entry and route definitions
+├── config.py              # Application configuration
+├── models.py              # Data model definitions
+├── database.py            # Database operations
+├── schema.sql             # Database table structure
+├── setup.py               # Project initialization script
+├── wsgi.py                # WSGI server entry point
+├── static/                # Static resource files
+│   ├── css/               # Stylesheets
+│   │   └── style.css      # Main stylesheet
+│   ├── js/                # JavaScript scripts
+│   │   ├── focus_timer.js # Focus timer implementation
+│   │   └── main.js        # Common script functions
+│   └── sounds/            # Audio files (notification sounds)
+├── templates/             # HTML template files
+│   ├── base.html          # Base template
+│   ├── dashboard.html     # User dashboard
+│   ├── focus_session.html # Focus mode page
+│   ├── forgot_password.html # Forgot password page
+│   ├── login.html         # Login page
+│   ├── profile.html       # Personal center page
+│   ├── register.html      # Registration page
+│   ├── stats.html         # Statistics page
+│   └── tasks.html         # Task management page
+├── translations/          # Multi-language translation files
+│   └── zh/                # Chinese translations
+│       └── LC_MESSAGES/   # Message catalog
+│           └── messages.po # Translation file
+└── utils/                 # Utility functions
+    ├── auth.py            # Authentication functions
+    └── helpers.py         # Helper functions
 ```
 
-## 🔧 测试指南
+## 🔧 Testing Guide
 
-### 功能测试
+### Functional Testing
 
-#### 1. 用户认证功能测试
-- **注册测试**：访问 `/register` 页面，填写注册信息并提交，确认能成功注册并自动登录
-- **登录测试**：访问 `/login` 页面，使用有效/无效凭据登录，验证登录逻辑
-- **密码重置**：访问 `/forgot_password` 页面，测试密码重置流程
+#### 1. User Authentication Testing
+- **Registration Test**: Visit `/register` page, fill in registration info and submit, verify successful registration and auto-login
+- **Login Test**: Visit `/login` page, use valid/invalid credentials, verify login logic
+- **Password Reset**: Visit `/forgot_password` page, test password reset flow
 
-#### 2. 任务管理功能测试
-- **创建任务**：在 `/tasks` 页面创建不同优先级和截止日期的任务
-- **编辑任务**：修改现有任务的信息，验证更新是否生效
-- **删除任务**：删除任务并确认任务从列表中移除
-- **任务状态**：将任务标记为完成/未完成，检查状态变化
+#### 2. Task Management Testing
+- **Create Tasks**: Create tasks with different priorities and due dates on `/tasks` page
+- **Edit Tasks**: Modify existing task information, verify updates
+- **Delete Tasks**: Delete tasks and confirm removal from list
+- **Task Status**: Mark tasks as complete/incomplete, check status changes
 
-#### 3. 专注模式功能测试
-- **计时功能**：设置不同时长，测试计时器准确性
-- **暂停/恢复**：测试暂停和恢复计时功能
-- **任务关联**：选择任务进行专注，验证专注时间是否正确关联到任务
-- **休息模式**：测试专注结束后自动进入休息模式的功能
+#### 3. Focus Mode Testing
+- **Timer Function**: Set different durations, test timer accuracy
+- **Pause/Resume**: Test pause and resume timer functionality
+- **Task Association**: Select tasks for focus, verify focus time correctly associated
+- **Break Mode**: Test automatic switch to break mode after focus session
 
-#### 4. 统计功能测试
-- **数据展示**：在 `/stats` 页面查看不同时间段的统计数据
-- **图表显示**：确认各类图表能正确显示学习数据
-- **导出数据**（如果实现）：测试数据导出功能
+#### 4. Statistics Testing
+- **Data Display**: View statistics for different time periods on `/stats` page
+- **Chart Display**: Verify various charts correctly display learning data
 
-### 性能测试
-- 模拟多个并发用户操作应用
-- 测试大量任务数据下的页面加载速度
-- 验证长时间运行专注模式的稳定性
+### Performance Testing
+- Simulate multiple concurrent user operations
+- Test page loading speed with large task datasets
+- Verify stability during long focus mode sessions
 
-### 开发环境测试命令
+### Development Environment Test Commands
 
 ```bash
-# 运行单元测试（如实现）
+# Run unit tests (if implemented)
 python -m unittest discover
 
-# 代码质量检查
+# Code quality check
 flake8 .
 
-# 静态类型检查（如使用类型注解）
+# Static type checking (if using type annotations)
 mypy .
 ```
 
-## 🚧 常见问题与解决方案
+## 🚧 Troubleshooting
 
-### 1. 数据库连接错误
-- 确保已运行 `python setup.py` 初始化数据库
-- 检查数据库文件权限
+### 1. Database Connection Error
+- Ensure `python setup.py` has been run to initialize database
+- Check database file permissions
 
-### 2. 依赖安装失败
-- 更新pip到最新版本：`pip install --upgrade pip`
-- 检查Python版本是否符合要求
+### 2. Dependency Installation Failure
+- Update pip to latest version: `pip install --upgrade pip`
+- Verify Python version compatibility
 
-### 3. 应用无法启动
-- 检查端口是否被占用，可使用 `flask run --port=5001` 更改端口
-- 查看控制台错误信息以定位问题
+### 3. Application Won't Start
+- Check if port is occupied, use `flask run --port=5001` to change port
+- Check console error messages for troubleshooting
 
-### 4. 多语言显示问题
-- 确保翻译文件已正确编译：`pybabel compile -d translations`
-- 检查浏览器语言设置
+### 4. Language Display Issues
+- Ensure translation files are properly compiled: `pybabel compile -d translations`
+- Check browser language settings
 
 ## 📜 License
 MIT License
 
-## 🤝 贡献指南
-欢迎提交Issues和Pull Requests来改进FocusFlow项目。
+## 🤝 Contributing
+We welcome issues and pull requests to improve the FocusFlow project.
 
-## 📞 联系方式
-如有任何问题或建议，请联系项目维护者。
+## 📞 Contact
+For any questions or suggestions, please contact the project maintainer.
 
 ---
-最后更新：{{ now.strftime('%Y-%m-%d') }}
-```
-
-### 项目测试指南
-
-以下是详细的项目测试步骤，帮助你确保FocusFlow应用正常运行：
-
-#### 1. 环境准备
-
-首先确保你的开发环境已经正确配置：
-
-```bash
-# 确保虚拟环境已激活
-.venv\Scripts\activate  # Windows
-# 或
-source .venv/bin/activate  # macOS/Linux
-
-# 安装所有依赖
-pip install -r requirements.txt
-```
-
-#### 2. 数据库初始化
-
-在运行应用前，需要初始化数据库：
-
-```bash
-cd focusflow
-python setup.py
-```
-
-这将创建SQLite数据库文件并初始化所需的表结构。初始化成功后，会显示"数据库初始化成功！"的提示。
-
-#### 3. 运行应用
-
-使用以下命令启动Flask开发服务器：
-
-```bash
-# 在focusflow目录下
-flask run
-```
-
-默认情况下，应用会在 http://127.0.0.1:5000 启动。
-
-#### 4. 功能测试步骤
-
-按照以下步骤测试各个功能模块：
-
-##### 用户认证模块
-1. 打开浏览器，访问 http://127.0.0.1:5000/login
-2. 点击"注册"链接，创建一个新的用户账户
-3. 使用新注册的账户登录系统
-4. 尝试使用错误的密码登录，验证错误提示
-5. 测试"忘记密码"功能
-
-##### 任务管理模块
-1. 登录后，点击左侧导航栏的"任务管理"
-2. 点击"添加新任务"按钮
-3. 填写任务信息（标题、描述、优先级等）并保存
-4. 验证新任务是否显示在任务列表中
-5. 编辑任务信息，验证更新功能
-6. 删除任务，验证删除功能
-
-##### 专注模式模块
-1. 点击左侧导航栏的"专注模式"
-2. 从下拉菜单中选择一个任务（或不选）
-3. 设置专注时长和休息时长
-4. 点击"开始"按钮，测试计时器功能
-5. 测试"暂停"和"重置"功能
-6. 等待计时结束，验证提示音和休息模式切换
-
-##### 统计与反馈模块
-1. 点击左侧导航栏的"统计与反馈"
-2. 查看默认时间段的统计数据和图表
-3. 尝试切换不同的时间段（今天、本周、本月）
-4. 验证数据是否正确更新
-5. 查看个性化建议
-
-##### 个人中心模块
-1. 点击左侧导航栏的"个人中心"
-2. 编辑个人信息和学习目标
-3. 测试修改密码功能
-4. 尝试切换语言和主题模式
-
-#### 5. 测试数据完整性
-
-在使用过程中，可以通过查看SQLite数据库来验证数据是否正确存储：
-
-```bash
-# 在focusflow目录下
-sqlite3 focusflow.db
-
-# 查看表结构
-.tables
-.schema users
-.schema tasks
-.schema focus_sessions
-
-# 查看数据
-SELECT * FROM users;
-SELECT * FROM tasks;
-SELECT * FROM focus_sessions;
-
-# 退出SQLite提示符
-.quit
-```
-
-#### 6. 排查常见问题
-
-如果在测试过程中遇到问题，可以检查以下几点：
-
-1. **检查日志输出**：Flask服务器控制台会显示请求和错误信息
-2. **确认数据库连接**：检查数据库文件是否存在且可访问
-3. **验证文件权限**：确保应用有读取静态文件和模板的权限
-4. **检查浏览器控制台**：查看前端JavaScript错误
-
-通过以上测试步骤，你可以全面验证FocusFlow应用的各个功能模块是否正常工作，并确保应用的稳定性和可靠性。
-        
+Last Updated: 12/26/2025

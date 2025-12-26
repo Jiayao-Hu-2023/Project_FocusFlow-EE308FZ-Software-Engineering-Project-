@@ -1,6 +1,6 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-   
+
 class User:
     def __init__(self, id=None, phone=None, first_name=None, last_name=None, email=None, 
                  gender=None, birth_date=None, school=None, education_level=None, grade=None, 
@@ -76,5 +76,4 @@ class Checkin:
         self.id = id
         self.user_id = user_id
         self.date = date
-
         self.created_at = created_at

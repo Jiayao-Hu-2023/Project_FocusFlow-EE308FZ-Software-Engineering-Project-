@@ -19,7 +19,7 @@
                         {{ g.initials|default('UU') }}
                     </div>
                     <button class="avatar-edit-btn" onclick="openEditProfileModal()">
-                        <i class="fas fa-camera"></i>
+                        <i class="fas fa-edit"></i>
                     </button>
                 </div>
                 <div class="profile-name">{{ user.first_name }} {{ user.last_name }}</div>
@@ -129,14 +129,6 @@
                 </div>
             </div>
 
-            <!-- Grade Section -->
-            <div class="grade-section card-shadow">
-                <div class="grade-header">
-                    <i class="fas fa-graduation-cap grade-icon"></i>
-                    <span class="grade-label">Grade</span>
-                </div>
-                <div class="grade-value">{{ grade_display if grade_display else 'Not set' }}</div>
-            </div>
 
             <!-- Check-in Record Section -->
             <div class="checkin-record-section card-shadow">
