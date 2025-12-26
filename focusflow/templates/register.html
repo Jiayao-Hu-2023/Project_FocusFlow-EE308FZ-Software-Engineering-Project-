@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>{{ translations.register }}</h2>
+        <form method="POST" action="{{ url_for('register', lang=lang) }}">
+            <!-- 个人基本信息 -->
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="flex: 2; margin-left: 0.5rem;">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required placeholder="Enter your first name">
+                </div>
+                <div class="form-group" style="flex: 1; margin-right: 0.5rem;">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required placeholder="Enter your last name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email (optional)">
+            </div>
+            <div class="form-group">
+                <label for="school">School</label>
+                <input type="text" id="school" name="school" placeholder="Enter your school (optional)">
+            </div>
+            <div class="form-group">
+                <label for="education_level">School Level</label>
+                <select id="education_level" name="education_level" onchange="loadGrades(this.value)">
+                    <option value="">-- Select School Level --</option>
+                    <option value="1">Elementary School</option>
+                    <option value="2">Junior High School</option>
+                    <option value="3">Senior High School</option>
+                    <option value="4">University/College</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="grade">Grade</label>
+                <select id="grade" name="grade">
+                    <option value="">-- Please select a school level --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Please set a password">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required placeholder="Please confirm your password">
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <div class="auth-links">
+            <a href="{{ url_for('login', lang=lang) }}">Return to Login</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadGrades(educationLevel) {
+    const gradeSelect = document.getElementById('grade');
+    gradeSelect.innerHTML = '<option value="">-- Please select --</option>';
+    
+    if (!educationLevel) {
+        gradeSelect.innerHTML = '<option value="">-- Please select a school level --</option>';
+        return;
+    }
+    
+    // 根据教育级别加载年级选项
+    let grades = [];
+    
+    if (educationLevel === '1') { // 小学
+        grades = [
+            ['1', 'Grade 1'],
+            ['2', 'Grade 2'],
+            ['3', 'Grade 3'],
+            ['4', 'Grade 4'],
+            ['5', 'Grade 5'],
+            ['6', 'Grade 6']
+        ];
+    } else if (educationLevel === '2') { // 初中
+        grades = [
+            ['1', 'Grade 7'],
+            ['2', 'Grade 8'],
+            ['3', 'Grade 9']
+        ];
+    } else if (educationLevel === '3') { // 高中
+        grades = [
+            ['1', 'Grade 10'],
+            ['2', 'Grade 11'],
+            ['3', 'Grade 12']
+        ];
+    } else if (educationLevel === '4') { // 大学
+        grades = [
+            ['1', 'Freshman'],
+            ['2', 'Sophomore'],
+            ['3', 'Junior'],
+            ['4', 'Senior'],
+            ['5', 'Postgraduate']
+        ];
+    }
+    
+    // 添加年级选项
+    grades.forEach(grade => {
+        const option = document.createElement('option');
+        option.value = grade[0];
+        option.textContent = grade[1];
+        gradeSelect.appendChild(option);
+    });
+}
+</script>
+{% endblock %}

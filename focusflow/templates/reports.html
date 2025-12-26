@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="reports-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Study report</h1>
+        <p class="page-subtitle">Check your learning progress and concentration effect.</p>
+    </div>
+
+    <!-- Stats Cards Section -->
+    <div class="stats-grid modern-grid">
+        <div class="stat-card stat-card-modern">
+            <div class="stat-icon time-icon">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Duration of concentration</div>
+                <div class="stat-value highlight">{{ weekly_stats.focus_time.hours|default('0') }} hours {{ weekly_stats.focus_time.minutes|default('0') }} minutes</div>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-card-modern">
+            <div class="stat-icon tasks-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Complete the task</div>
+                <div class="stat-value highlight">{{ weekly_stats.completed_tasks|default('0') }} pieces</div>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-card-modern">
+            <div class="stat-icon streak-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Continuous check-in</div>
+                <div class="stat-value highlight streak-value">{{ weekly_stats.streak_days|default('0') }} day{{ 's' if weekly_stats.streak_days|default(0) != 1 else '' }}</div>
+                <div class="stat-change neutral">—Maintain stability</div>
+            </div>
+        </div>
+        
+        <div class="stat-card stat-card-modern">
+            <div class="stat-icon productivity-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Task completion rate</div>
+                <div class="stat-value highlight">{{ weekly_stats.productivity_score|default('0') }} percent</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 5% increase ↑ compared with last week
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Learning Trends Section -->
+    <div class="learning-chart card-shadow">
+        <div class="section-header">
+            <div>
+                <h2>Learning trends in the last 7 days</h2>
+                <p class="section-subtitle">Focus on the time and check-in situation.</p>
+            </div>
+        </div>
+        
+        <div class="chart-placeholder enhanced-chart">
+            <div class="chart-bars modern-chart-bars">
+                {% for day_data in weekly_trend %}
+                <div class="chart-bar modern-chart-bar">
+                    <div class="bar" style="height: {{ day_data.value * 0.5 }}px; 
+                        {% if day_data.checked_in %}background-color: #4a6fa5;{% else %}background-color: #e0e0e0;{% endif %}">
+                        <div class="bar-tooltip">
+                            {% if day_data.checked_in %}
+                                {{ day_data.focus_time.hours|default('0') }}h {{ day_data.focus_time.minutes|default('0') }}m
+                            {% else %}
+                                Not checked in
+                            {% endif %}
+                        </div>
+                    </div>
+                    <span class="bar-label">{{ day_data.date[-5:] }}<br>{{ day_data.day }}</span>
+                    {% if day_data.checked_in %}
+                    <span class="checkin-mark"><i class="fas fa-check-circle"></i></span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Two Column Layout for Check-in Details and Completed Tasks -->
+    <div class="reports-details-grid">
+        <!-- Check-in Details Section -->
+        <div class="checkin-details card-shadow">
+            <div class="section-header">
+                <div>
+                    <h2>Check-in details</h2>
+                    <p class="section-subtitle">Check your daily check-in record list</p>
+                </div>
+            </div>
+            
+            {% if checked_in_dates %}
+            <div class="checkin-dates-list">
+                {% for checkin in checked_in_dates|sort(reverse=true, attribute='date') %}
+                <div class="checkin-date-item modern-checkin-item">
+                    <div class="checkin-date-info">
+                        <span class="checkin-day">{{ checkin.day }}</span>
+                        <span class="checkin-date">{{ checkin.date_display }}</span>
+                    </div>
+                    <div class="checkin-stats">
+                        <span class="checkin-focus-time">
+                            <i class="fas fa-clock"></i>
+                            {{ checkin.focus_hours.hours|default('0') }}h {{ checkin.focus_hours.minutes|default('0') }}m
+                        </span>
+                        <span class="checkin-badge"><i class="fas fa-check-circle"></i> Checked in</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state enhanced-empty-state">
+                <div class="empty-icon-container">
+                    <i class="far fa-calendar-alt empty-icon-large"></i>
+                </div>
+                <p class="empty-title">No check-in records</p>
+                <p class="empty-subtitle">You haven't checked in recently. Start focusing on your studies!</p>
+                <a href="{{ url_for('focus', lang=lang) }}" class="btn btn-primary btn-small">Start Focus</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Completed Tasks Section -->
+        <div class="completed-tasks card-shadow">
+            <div class="section-header">
+                <div>
+                    <h2>Task completion list</h2>
+                    <p class="section-subtitle">Check the tasks you have completed recently</p>
+                </div>
+            </div>
+            
+            {% if completed_tasks_list %}
+            <div class="completed-tasks-list">
+                {% for task in completed_tasks_list %}
+                <div class="completed-task-item modern-task-item">
+                    <div class="task-icon-completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="task-info-completed">
+                        <span class="task-title-completed">{{ task.title }}</span>
+                        {% if task.course %}
+                        <span class="course-tag-completed">{{ task.course }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="task-completion-time">
+                        {% if task.completion_time %}
+                        <span class="completion-date">{{ task.completion_date }}</span>
+                        <span class="completion-time">{{ task.completion_time }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state enhanced-empty-state">
+                <div class="empty-icon-container">
+                    <i class="far fa-calendar-check empty-icon-large"></i>
+                </div>
+                <p class="empty-title">No completed tasks</p>
+                <p class="empty-subtitle">You haven't completed any tasks recently. Go add and complete some tasks!</p>
+                <a href="{{ url_for('tasks', lang=lang) }}" class="btn btn-primary btn-small">Add Task</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add page loading animation effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add fade-in animation for stat cards
+        const statCards = document.querySelectorAll('.stat-card-modern');
+        statCards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100 * index);
+        });
+        
+        // Add animation for chart bars
+        const bars = document.querySelectorAll('.modern-chart-bar .bar');
+        bars.forEach((bar, index) => {
+            const height = bar.style.height;
+            bar.style.height = '0';
+            setTimeout(() => {
+                bar.style.height = height;
+            }, 200 + (index * 100));
+        });
+    });
+</script>
+{% endblock %}
