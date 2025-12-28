@@ -4,8 +4,8 @@
 <div class="focus-page-container">
     <!-- Page Header -->
     <div class="focus-page-header">
-        <h1 class="focus-page-title">Study Timer</h1>
-        <p class="focus-page-subtitle">Use the Pomodoro technique to boost your focus</p>
+        <h1 class="focus-page-title">{{ translations.focus_page_title }}</h1>
+        <p class="focus-page-subtitle">{{ translations.focus_page_subtitle }}</p>
     </div>
 
     <!-- Main Content Grid -->
@@ -13,8 +13,8 @@
         <!-- Left Column: Focus Time Card -->
         <div class="focus-main-card">
             <div class="focus-card-header">
-                <h2 class="focus-card-title">Focus Time</h2>
-                <p class="focus-card-subtitle">Stay focused on your study session</p>
+                <h2 class="focus-card-title">{{ translations.focus_time }}</h2>
+                <p class="focus-card-subtitle">{{ translations.focus_time_subtitle }}</p>
             </div>
             
             <!-- Large Circular Timer -->
@@ -26,9 +26,9 @@
 
             <!-- Subject Selection -->
             <div class="subject-selector">
-                <label for="subject-select" class="subject-label">Select Subject</label>
+                <label for="subject-select" class="subject-label">{{ translations.select_subject }}</label>
                 <select id="subject-select" class="subject-dropdown">
-                    <option value="">Choose a subject</option>
+                    <option value="">{{ translations.choose_subject }}</option>
                     {% if tasks %}
                         {% for task in tasks %}
                             {% if task.course %}
@@ -42,28 +42,28 @@
             <!-- Control Buttons -->
             <div class="timer-controls">
                 <button class="btn-start-timer" id="startBtn">
-                    <i class="fas fa-play"></i> Start
+                    <i class="fas fa-play"></i> {{ translations.start }}
                 </button>
                 <button class="btn-pause-timer" id="pauseBtn" style="display: none;">
-                    <i class="fas fa-pause"></i> Pause
+                    <i class="fas fa-pause"></i> {{ translations.pause }}
                 </button>
-                <button class="btn-reset-timer" id="resetBtn" title="Reset">
+                <button class="btn-reset-timer" id="resetBtn" title="{{ translations.reset }}">
                     <i class="fas fa-redo"></i>
                 </button>
             </div>
 
             <!-- Preset Time Buttons -->
             <div class="preset-times">
-                <button class="preset-btn active" data-minutes="25">25 min</button>
-                <button class="preset-btn" data-minutes="45">45 min</button>
-                <button class="preset-btn" data-minutes="60">60 min</button>
+                <button class="preset-btn active" data-minutes="25">25 {{ translations['min'] }}</button>
+                <button class="preset-btn" data-minutes="45">45 {{ translations['min'] }}</button>
+                <button class="preset-btn" data-minutes="60">60 {{ translations['min'] }}</button>
             </div>
 
             <!-- Custom Time Input -->
             <div class="custom-time-section">
                 <div class="custom-time-group">
-                    <input type="number" id="customMinutes" min="1" max="240" placeholder="Enter custom minutes">
-                    <button id="setCustomTime" class="preset-btn">Set</button>
+                    <input type="number" id="customMinutes" min="1" max="240" placeholder="{{ translations.custom_minutes_placeholder }}">
+                    <button id="setCustomTime" class="preset-btn">{{ translations.set }}</button>
                 </div>
             </div>
         </div>
@@ -72,32 +72,32 @@
         <div class="focus-stats-column">
             <!-- Today's Progress Card -->
             <div class="focus-stat-card">
-                <h3 class="stat-card-title">Today's Progress</h3>
+                <h3 class="stat-card-title">{{ translations.todays_progress }}</h3>
                 <div class="stat-card-content">
-                    <div class="stat-large-value" id="todayProgress">{{ today_progress|default('0h 0m') }}</div>
-                    <p class="stat-card-description">Total study time</p>
+                    <div class="stat-large-value" id="todayProgress">{{ today_progress|default('0' ~ translations['h'] ~ ' 0' ~ translations['min']) }}</div>
+                    <p class="stat-card-description">{{ translations.total_study_time }}</p>
                 </div>
             </div>
 
             <!-- How it works Card -->
             <div class="focus-stat-card">
-                <h3 class="stat-card-title">How it works</h3>
+                <h3 class="stat-card-title">{{ translations.how_it_works }}</h3>
                 <div class="how-it-works-list">
                     <div class="how-it-works-item">
                         <div class="step-number">1</div>
-                        <p>Choose a subject and set your focus time</p>
+                        <p>{{ translations.how_it_works_1 }}</p>
                     </div>
                     <div class="how-it-works-item">
                         <div class="step-number">2</div>
-                        <p>Work with full concentration until the timer ends</p>
+                        <p>{{ translations.how_it_works_2 }}</p>
                     </div>
                     <div class="how-it-works-item">
                         <div class="step-number">3</div>
-                        <p>Take a short break to recharge</p>
+                        <p>{{ translations.how_it_works_3 }}</p>
                     </div>
                     <div class="how-it-works-item">
                         <div class="step-number">4</div>
-                        <p>Repeat the cycle to build momentum</p>
+                        <p>{{ translations.how_it_works_4 }}</p>
                     </div>
                 </div>
             </div>
@@ -112,17 +112,17 @@
             <div class="modal-icon-container">
                 <i class="fas fa-exclamation-triangle"></i>
             </div>
-            <h3 class="modal-title">Focus Mode Warning</h3>
+            <h3 class="modal-title">{{ translations.focus_mode_warning }}</h3>
         </div>
         <div class="modal-body">
-            <p class="modal-message">Are you sure to proceed? If so, the duration of your current study will not be included in the records.</p>
+            <p class="modal-message">{{ translations.focus_mode_warning_message }}</p>
         </div>
         <div class="modal-footer">
             <button id="cancelBtn" class="modal-btn modal-btn-secondary">
-                <i class="fas fa-times"></i> Cancel
+                <i class="fas fa-times"></i> {{ translations.cancel }}
             </button>
             <button id="confirmBtn" class="modal-btn modal-btn-primary">
-                <i class="fas fa-check"></i> Continue
+                <i class="fas fa-check"></i> {{ translations.continue }}
             </button>
         </div>
     </div>
@@ -284,7 +284,7 @@
         const confirmBtn = document.getElementById('confirmBtn');
 
         // 显示/隐藏警告弹窗
-        function showModal(targetRoute = '/focus') {
+        function showModal(targetRoute = '{{ url_for("focus", lang=lang) }}') {
             warningModal.style.display = 'flex';
             confirmBtn.dataset.targetRoute = targetRoute;
         }
@@ -365,26 +365,16 @@
                 !isPresetBtn) {
                 event.preventDefault();
                 
-                // 检测用户点击的是哪个导航按钮，并设置对应的目标路由
-                let targetRoute = '/focus'; // 默认路由改为/focus
+                // 检测用户点击的是哪个导航按钮，并设置对应的目标路由（保留lang参数）
+                let targetRoute = '{{ url_for("focus", lang=lang) }}';
                 
                 // 检查是否是导航链接
                 const navLink = event.target.closest('a.nav-link') || event.target.closest('a.sidebar-nav-item');
                 if (navLink) {
                     const href = navLink.getAttribute('href');
                     if (href) {
-                        // 根据href判断目标路由
-                        if (href.includes('dashboard')) {
-                            targetRoute = '/dashboard';
-                        } else if (href.includes('tasks')) {
-                            targetRoute = '/tasks';
-                        } else if (href.includes('reports')) {
-                            targetRoute = '/reports';
-                        } else if (href.includes('profile')) {
-                            targetRoute = '/profile';
-                        } else if (href.includes('focus')) {
-                            targetRoute = '/focus'; // 添加Focus mode路由处理
-                        }
+                        // 直接使用导航链接的href（它已经包含?lang=...）
+                        targetRoute = href;
                     }
                 }
                 
@@ -485,6 +475,11 @@
             });
         }
 
+        // Localize reset tooltip
+        if (resetBtn) {
+            resetBtn.title = (window.TRANSLATIONS && window.TRANSLATIONS.reset) ? window.TRANSLATIONS.reset : 'Reset';
+        }
+
         // 更新今日进度
         function updateTodayProgress() {
             fetch('/focus/stats')
@@ -493,11 +488,14 @@
                     const hours = Math.floor(data.today_duration / 60);
                     const minutes = data.today_duration % 60;
                     const todayProgressEl = document.getElementById('todayProgress');
+                    const t = (window.TRANSLATIONS || {});
+                    const hLabel = t.h || 'h';
+                    const mLabel = t.min || 'min';
                     if (todayProgressEl) {
                         if (hours > 0) {
-                            todayProgressEl.textContent = `${hours}h ${minutes}m`;
+                            todayProgressEl.textContent = `${hours}${hLabel} ${minutes}${mLabel}`;
                         } else {
-                            todayProgressEl.textContent = `${minutes}m`;
+                            todayProgressEl.textContent = `${minutes}${mLabel}`;
                         }
                     }
                 })

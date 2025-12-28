@@ -97,7 +97,10 @@ class FocusTimer {
         }
 
         // 更新页面标题，以便用户在其他标签页也能看到倒计时
-        document.title = `${displayText} - ${this.isFocusMode ? '专注中' : '休息中'}`;
+        const t = (window.TRANSLATIONS || {});
+        const focusLabel = t.focus_in_progress || 'Focusing';
+        const breakLabel = t.break_in_progress || 'On break';
+        document.title = `${displayText} - ${this.isFocusMode ? focusLabel : breakLabel}`;
     }
 
     
@@ -123,7 +126,11 @@ class FocusTimer {
         }
         
         // 显示通知
-        showNotification(this.isFocusMode ? '休息时间结束，开始专注！' : '专注时间结束，该休息了！');
+        const t = (window.TRANSLATIONS || {});
+        const msg = this.isFocusMode
+          ? (t.break_over_start_focus || 'Break is over — time to focus!')
+          : (t.focus_over_take_break || 'Focus time is over — take a break!');
+        showNotification(msg);
     }
 
         // 添加全局按键监听
@@ -155,7 +162,8 @@ class FocusTimer {
 
     // 显示警告对话框
     showWarningDialog() {
-        const warningMessage = "Are you sure to proceed? If so, the duration of your current study will not be included in the records.";
+        const t = (window.TRANSLATIONS || {});
+        const warningMessage = t.focus_mode_warning_message || "Are you sure to proceed? If so, the duration of your current study will not be included in the records.";
 
         if (confirm(warningMessage)) {
             // 用户确认继续，暂停计时器
@@ -179,14 +187,14 @@ class FocusTimer {
             })
         }).then(response => {
             if (response.ok) {
-                console.log('专注会话保存成功');
+                console.log('Focus session saved');
                 // 更新专注统计
                 this.updateFocusStats();
             } else {
-                console.error('专注会话保存失败');
+                console.error('Failed to save focus session');
             }
         }).catch(error => {
-            console.error('保存专注会话时出错:', error);
+            console.error('Error saving focus session:', error);
         });
     }
     
@@ -198,13 +206,14 @@ class FocusTimer {
                 // 更新页面上的统计信息
                 const statItems = document.querySelectorAll('.stat-item .stat-value');
                 if (statItems.length >= 3) {
-                    statItems[0].textContent = data.completed_sessions + '个';
-                    statItems[1].textContent = data.today_duration + '分钟';
+                    const t = (window.TRANSLATIONS || {});
+                    statItems[0].textContent = data.completed_sessions;
+                    statItems[1].textContent = `${data.today_duration} ${t.min || 'min'}`;
                     statItems[2].textContent = data.completion_rate + '%';
                 }
             })
             .catch(error => {
-                console.error('获取专注统计时出错:', error);
+                console.error('Error fetching focus stats:', error);
             });
     }
     
@@ -229,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fullscreenButton.addEventListener('click', function() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`全屏请求错误: ${err.message}`);
+                    console.log(`Fullscreen request error: ${err.message}`);
                 });
             } else {
                 if (document.exitFullscreen) {

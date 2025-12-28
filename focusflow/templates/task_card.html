@@ -2,6 +2,7 @@
      data-subject="{{ task.course or '' }}" 
      data-priority="{{ task.priority }}" 
      data-status="{{ task.status }}"
+     data-due-date-iso="{{ task.due_date_iso or '' }}"
      data-task-id="{{ task.id }}">
 
     <!-- Card Header: Checkbox and Title -->
@@ -32,12 +33,12 @@
         </div>
         {% endif %}
 
-        {% if task.due_date %}
+        {% if task.due_date_display %}
         <div class="task-detail-item">
             <i class="far fa-calendar"></i>
             <span class="task-due-date-modern 
-                {% if task.due_date == 'Today' or 'today' in task.due_date|lower %}due-today{% elif task.due_date == 'Tomorrow' or 'tomorrow' in task.due_date|lower %}due-tomorrow{% endif %}">
-                {{ task.due_date }}
+                {% if task.due_days_diff == 0 %}due-today{% elif task.due_days_diff == 1 %}due-tomorrow{% endif %}">
+                {{ task.due_date_display }}
             </span>
         </div>
         {% endif %}
@@ -46,7 +47,7 @@
         <div class="task-detail-item">
             <i class="far fa-clock"></i>
             <span class="task-time-modern">
-                {{ task.estimated_time }} min
+                {{ task.estimated_time }} {{ translations['min'] }}
             </span>
         </div>
         {% endif %}
@@ -56,15 +57,15 @@
     <div class="task-actions-modern">
         {% if task.priority %}
         <span class="priority-tag-modern priority-{{ task.priority }}">
-            {{ task.priority|title }}
+            {{ translations['priority_' ~ task.priority] if ('priority_' ~ task.priority) in translations else task.priority|title }}
         </span>
         {% endif %}
 
         <div class="action-buttons">
-            <button class="edit-btn-modern" data-task-id="{{ task.id }}" title="Edit task">
+            <button class="edit-btn-modern" data-task-id="{{ task.id }}" title="{{ translations.edit }}">
                 <i class="fas fa-edit"></i>
             </button>
-            <button class="delete-btn-modern" data-task-id="{{ task.id }}" title="Delete task">
+            <button class="delete-btn-modern" data-task-id="{{ task.id }}" title="{{ translations.delete }}">
                 <i class="fas fa-trash"></i>
             </button>
         </div>

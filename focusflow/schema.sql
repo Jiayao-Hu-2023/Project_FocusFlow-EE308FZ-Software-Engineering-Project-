@@ -11,6 +11,7 @@ CREATE TABLE users (
     education_level TEXT NOT NULL,
     grade TEXT,
     password TEXT NOT NULL,
+    profile_picture TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

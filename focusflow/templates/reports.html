@@ -4,8 +4,8 @@
 <div class="reports-container">
     <!-- Page Header -->
     <div class="page-header">
-        <h1 class="page-title">Study report</h1>
-        <p class="page-subtitle">Check your learning progress and concentration effect.</p>
+        <h1 class="page-title">{{ translations.reports_page_title }}</h1>
+        <p class="page-subtitle">{{ translations.reports_page_subtitle }}</p>
     </div>
 
     <!-- Stats Cards Section -->
@@ -15,8 +15,8 @@
                 <i class="fas fa-hourglass-half"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Duration of concentration</div>
-                <div class="stat-value highlight">{{ weekly_stats.focus_time.hours|default('0') }} hours {{ weekly_stats.focus_time.minutes|default('0') }} minutes</div>
+                <div class="stat-label">{{ translations.duration_of_concentration }}</div>
+                <div class="stat-value highlight">{{ weekly_stats.focus_time.hours|default('0') }} {{ translations['hours'] }} {{ weekly_stats.focus_time.minutes|default('0') }} {{ translations['minutes'] }}</div>
             </div>
         </div>
         
@@ -25,8 +25,8 @@
                 <i class="fas fa-tasks"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Complete the task</div>
-                <div class="stat-value highlight">{{ weekly_stats.completed_tasks|default('0') }} pieces</div>
+                <div class="stat-label">{{ translations.completed_tasks }}</div>
+                <div class="stat-value highlight">{{ weekly_stats.completed_tasks|default('0') }} {{ translations['items'] }}</div>
             </div>
         </div>
         
@@ -35,9 +35,9 @@
                 <i class="fas fa-calendar-check"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Continuous check-in</div>
-                <div class="stat-value highlight streak-value">{{ weekly_stats.streak_days|default('0') }} day{{ 's' if weekly_stats.streak_days|default(0) != 1 else '' }}</div>
-                <div class="stat-change neutral">—Maintain stability</div>
+                <div class="stat-label">{{ translations.continuous_checkin }}</div>
+                <div class="stat-value highlight streak-value">{{ weekly_stats.streak_days|default('0') }} {{ translations['days'] }}</div>
+                <div class="stat-change neutral">{{ translations.maintain_stability }}</div>
             </div>
         </div>
         
@@ -46,10 +46,10 @@
                 <i class="fas fa-chart-line"></i>
             </div>
             <div class="stat-content">
-                <div class="stat-label">Task completion rate</div>
-                <div class="stat-value highlight">{{ weekly_stats.productivity_score|default('0') }} percent</div>
+                <div class="stat-label">{{ translations.task_completion_rate }}</div>
+                <div class="stat-value highlight">{{ weekly_stats.productivity_score|default('0') }} {{ translations['percent'] }}</div>
                 <div class="stat-change positive">
-                    <i class="fas fa-arrow-up"></i> 5% increase ↑ compared with last week
+                    <i class="fas fa-arrow-up"></i> {{ translations.compared_with_last_week }}
                 </div>
             </div>
         </div>
@@ -59,8 +59,8 @@
     <div class="learning-chart card-shadow">
         <div class="section-header">
             <div>
-                <h2>Learning trends in the last 7 days</h2>
-                <p class="section-subtitle">Focus on the time and check-in situation.</p>
+                <h2>{{ translations.learning_trends_7_days }}</h2>
+                <p class="section-subtitle">{{ translations.learning_trends_subtitle }}</p>
             </div>
         </div>
         
@@ -72,9 +72,9 @@
                         {% if day_data.checked_in %}background-color: #4a6fa5;{% else %}background-color: #e0e0e0;{% endif %}">
                         <div class="bar-tooltip">
                             {% if day_data.checked_in %}
-                                {{ day_data.focus_time.hours|default('0') }}h {{ day_data.focus_time.minutes|default('0') }}m
+                                {{ day_data.focus_time.hours|default('0') }} {{ translations['hours'] }} {{ day_data.focus_time.minutes|default('0') }} {{ translations['minutes'] }}
                             {% else %}
-                                Not checked in
+                                {{ translations.not_checked_in }}
                             {% endif %}
                         </div>
                     </div>
@@ -94,8 +94,8 @@
         <div class="checkin-details card-shadow">
             <div class="section-header">
                 <div>
-                    <h2>Check-in details</h2>
-                    <p class="section-subtitle">Check your daily check-in record list</p>
+                    <h2>{{ translations.checkin_details }}</h2>
+                    <p class="section-subtitle">{{ translations.checkin_details_subtitle }}</p>
                 </div>
             </div>
             
@@ -110,9 +110,9 @@
                     <div class="checkin-stats">
                         <span class="checkin-focus-time">
                             <i class="fas fa-clock"></i>
-                            {{ checkin.focus_hours.hours|default('0') }}h {{ checkin.focus_hours.minutes|default('0') }}m
+                            {{ checkin.focus_hours.hours|default('0') }} {{ translations['hours'] }} {{ checkin.focus_hours.minutes|default('0') }} {{ translations['minutes'] }}
                         </span>
-                        <span class="checkin-badge"><i class="fas fa-check-circle"></i> Checked in</span>
+                        <span class="checkin-badge"><i class="fas fa-check-circle"></i> {{ translations.legend_checked_in }}</span>
                     </div>
                 </div>
                 {% endfor %}
@@ -122,9 +122,9 @@
                 <div class="empty-icon-container">
                     <i class="far fa-calendar-alt empty-icon-large"></i>
                 </div>
-                <p class="empty-title">No check-in records</p>
-                <p class="empty-subtitle">You haven't checked in recently. Start focusing on your studies!</p>
-                <a href="{{ url_for('focus', lang=lang) }}" class="btn btn-primary btn-small">Start Focus</a>
+                <p class="empty-title">{{ translations.no_checkin_records }}</p>
+                <p class="empty-subtitle">{{ translations.no_checkin_records_subtitle }}</p>
+                <a href="{{ url_for('focus', lang=lang) }}" class="btn btn-primary btn-small">{{ translations.start_focus }}</a>
             </div>
             {% endif %}
         </div>
@@ -133,8 +133,8 @@
         <div class="completed-tasks card-shadow">
             <div class="section-header">
                 <div>
-                    <h2>Task completion list</h2>
-                    <p class="section-subtitle">Check the tasks you have completed recently</p>
+                    <h2>{{ translations.task_completion_list }}</h2>
+                    <p class="section-subtitle">{{ translations.task_completion_list_subtitle }}</p>
                 </div>
             </div>
             
@@ -165,9 +165,9 @@
                 <div class="empty-icon-container">
                     <i class="far fa-calendar-check empty-icon-large"></i>
                 </div>
-                <p class="empty-title">No completed tasks</p>
-                <p class="empty-subtitle">You haven't completed any tasks recently. Go add and complete some tasks!</p>
-                <a href="{{ url_for('tasks', lang=lang) }}" class="btn btn-primary btn-small">Add Task</a>
+                <p class="empty-title">{{ translations.no_completed_tasks }}</p>
+                <p class="empty-subtitle">{{ translations.no_completed_tasks_subtitle }}</p>
+                <a href="{{ url_for('tasks', lang=lang) }}" class="btn btn-primary btn-small">{{ translations.add_task }}</a>
             </div>
             {% endif %}
         </div>

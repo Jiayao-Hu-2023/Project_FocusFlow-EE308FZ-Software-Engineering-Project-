@@ -17,17 +17,21 @@ class Config:
     LANGUAGES = {
         'en-US': 'English (US)',
         'zh-CN': '简体中文',
-        'zh-TW': '繁體中文（台灣）'
+        'zh-TW': '繁體中文（台灣）',
+        'ja-JP': '日本語',
+        'es-ES': 'Español',
+        'hi-IN': 'हिन्दी',
+        'fr-FR': 'Français'
     }
     
     # 教育级别和对应年级
     EDUCATION_LEVELS = {
-        '小学': ['一年级', '二年级', '三年级', '四年级', '五年级', '六年级'],
-        '初中': ['初一', '初二', '初三'],
-        '高中': ['高一', '高二', '高三'],
-        '大学本科': ['大一', '大二', '大三', '大四'],
-        '硕士研究生': ['研一', '研二', '研三'],
-        '博士研究生': ['博一', '博二', '博三', '博四', '博五']
+        'Elementary School': ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6'],
+        'Junior High School': ['Grade 7', 'Grade 8', 'Grade 9'],
+        'Senior High School': ['Grade 10', 'Grade 11', 'Grade 12'],
+        'Undergraduate': ['Freshman', 'Sophomore', 'Junior', 'Senior'],
+        'Master': ['Year 1', 'Year 2', 'Year 3'],
+        'PhD': ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5']
     }
 
 class DevelopmentConfig(Config):

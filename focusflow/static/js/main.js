@@ -96,7 +96,8 @@ function initFormValidation() {
                     isValid = false;
                     password.classList.add('error');
                     confirmPassword.classList.add('error');
-                    alert('两次输入的密码不一致');
+                    const t = (window.TRANSLATIONS || {});
+                    alert(t.passwords_do_not_match || 'Passwords do not match');
                 }
             }
             
@@ -234,7 +235,8 @@ function editTask(taskId) {
 
 // 删除任务
 function deleteTask(taskId) {
-    if (confirm('Are you sure you want to delete this task?')) {
+    const t = (window.TRANSLATIONS || {});
+    if (confirm(t.confirm_delete_task || 'Are you sure you want to delete this task?')) {
         // 发送删除请求
         fetch(`/tasks/delete/${taskId}`, {
             method: 'POST',
@@ -251,14 +253,14 @@ function deleteTask(taskId) {
                     // 更新任务计数
                     updateTaskCounts();
                 }
-                showNotification('Task deleted successfully!');
+                showNotification(t.task_deleted_success || 'Task deleted successfully!');
             } else {
-                showNotification('Failed to delete task. Please try again.');
+                showNotification(t.task_delete_failed || 'Failed to delete task. Please try again.');
             }
         })
         .catch(error => {
             console.error('Delete task error:', error);
-            showNotification('Error deleting task. Please try again.');
+            showNotification(t.task_delete_failed || 'Error deleting task. Please try again.');
         });
     }
 }

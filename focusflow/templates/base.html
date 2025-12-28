@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FocusFlow - A Personalized Learning Management and Focus Boost Platform</title>
+    <title>{{ translations.app_title }}</title>
     <!-- 引入CSS样式 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- 引入Font Awesome图标库 -->
@@ -25,31 +25,46 @@
             {% if 'user_id' in session %}
             <nav class="header-nav-links">
                 <a href="{{ url_for('dashboard', lang=lang) }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
-                    <i class="fas fa-home"></i> Dashboard
+                    <i class="fas fa-home"></i> {{ translations.dashboard }}
                 </a>
                 <a href="{{ url_for('tasks', lang=lang) }}" class="nav-link {% if request.endpoint == 'tasks' %}active{% endif %}">
-                    <i class="fas fa-bullseye"></i> Mission
+                    <i class="fas fa-bullseye"></i> {{ translations.tasks }}
                 </a>
                 <a href="{{ url_for('focus', lang=lang) }}" class="nav-link {% if request.endpoint == 'focus' %}active{% endif %}">
-                    <i class="fas fa-hourglass-half"></i> Focus mode
+                    <i class="fas fa-hourglass-half"></i> {{ translations.focus }}
                 </a>
                 <a href="{{ url_for('reports', lang=lang) }}" class="nav-link {% if request.endpoint == 'reports' %}active{% endif %}">
-                    <i class="fas fa-file-alt"></i> Report
+                    <i class="fas fa-file-alt"></i> {{ translations.reports }}
                 </a>
                 <a href="{{ url_for('profile', lang=lang) }}" class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}">
-                    <i class="fas fa-user-circle"></i> Personal center
+                    <i class="fas fa-user-circle"></i> {{ translations.profile }}
                 </a>
             </nav>
             {% endif %}
             
+            <!-- Language Switcher -->
+            <div class="header-language-selector" style="margin-right: 15px; display: flex; align-items: center;">
+                <i class="fas fa-globe" style="margin-right: 5px; color: #666;"></i>
+                <select id="language-select" class="language-select" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc; background-color: white;">
+                    {% for code, name in supported_languages.items() %}
+                    <option value="{{ code }}" {% if code == lang %}selected{% endif %}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
             <!-- 用户菜单区域 -->
             <div class="header-user-menu">
+                {% if g.user_profile_picture %}
+                <div class="user-avatar-header" style="background-image: url('{{ url_for('static', filename='uploads/avatars/' ~ g.user_profile_picture) }}'); background-size: cover; background-position: center;">
+                </div>
+                {% else %}
                 <div class="user-avatar-header" style="background-color: {{ g.user_avatar_color|default('#ffd700') }}">
                     {{ g.initials|default('UU') }}
                 </div>
+                {% endif %}
                 <span class="user-name-header">{{ g.user_name|default('User') }}</span>
                 {% if 'user_id' in session %}
-                <a href="{{ url_for('logout') }}" class="logout-link">Log out</a>
+                <a href="{{ url_for('logout') }}" class="logout-link">{{ translations.logout }}</a>
                 {% endif %}
             </div>
         </div>
@@ -71,28 +86,28 @@
                 <nav class="sidebar-nav">
                     <a href="{{ url_for('dashboard', lang=lang) }}" class="sidebar-nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
                         <i class="fas fa-home"></i>
-                        <span>Dashboard</span>
+                        <span>{{ translations.dashboard }}</span>
                     </a>
                     <a href="{{ url_for('tasks', lang=lang) }}" class="sidebar-nav-item {% if request.endpoint == 'tasks' %}active{% endif %}">
                         <i class="fas fa-bullseye"></i>
-                        <span>Mission</span>
+                        <span>{{ translations.tasks }}</span>
                     </a>
                     <a href="{{ url_for('focus', lang=lang) }}" class="sidebar-nav-item {% if request.endpoint == 'focus' %}active{% endif %}">
                         <i class="fas fa-hourglass-half"></i>
-                        <span>Focus mode</span>
+                        <span>{{ translations.focus }}</span>
                     </a>
                     <a href="{{ url_for('reports', lang=lang) }}" class="sidebar-nav-item {% if request.endpoint == 'reports' %}active{% endif %}">
                         <i class="fas fa-file-alt"></i>
-                        <span>Report</span>
+                        <span>{{ translations.reports }}</span>
                     </a>
                     <a href="{{ url_for('profile', lang=lang) }}" class="sidebar-nav-item {% if request.endpoint == 'profile' %}active{% endif %}">
                         <i class="fas fa-user"></i>
-                        <span>Personal center</span>
+                        <span>{{ translations.profile }}</span>
                     </a>
                 </nav>
                 <!-- Total Study Time -->
                 <div class="sidebar-study-time">
-                    <div class="study-time-label">Total Study Time</div>
+                    <div class="study-time-label">{{ translations.total_study_time }}</div>
                     <div class="study-time-value">{{ g.total_study_time|default('0h 0m') }}</div>
                 </div>
             </div>
@@ -122,7 +137,18 @@
         </div>
     </footer>
     
+    <!-- Make translations available to all JS (page scripts + static js) -->
+    <script>
+      window.TRANSLATIONS = {{ translations|tojson }};
+      window.LANG = "{{ lang }}";
+    </script>
+    
     <!-- 引入JavaScript -->
+    <script>
+        // Make translations available to static JS files
+        window.TRANSLATIONS = {{ translations|tojson }};
+        window.CURRENT_LANG = "{{ lang }}";
+    </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
     <!-- 子模板特定JavaScript -->

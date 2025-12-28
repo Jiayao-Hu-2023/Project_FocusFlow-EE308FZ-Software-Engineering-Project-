@@ -2314,6 +2314,13 @@ font-size: 1rem;
     margin: 0 auto;
 }
 
+.profile-avatar-large.profile-avatar-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: transparent;
+}
+
 .avatar-edit-btn {
     position: absolute;
     bottom: 0;
