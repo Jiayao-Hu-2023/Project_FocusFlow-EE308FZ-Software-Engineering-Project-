@@ -1,0 +1,459 @@
+{% extends "base.html" %}
+
+{% block title %}{{ translations.tasks_page_title }} - FocusFlow{% endblock %}
+
+{% block content %}
+<div class="tasks-page-container">
+    <!-- Page Header -->
+    <div class="tasks-page-header">
+        <div class="tasks-header-content">
+            <div>
+                <h1 class="tasks-page-title">{{ translations.tasks_page_title }}</h1>
+                <p class="tasks-page-subtitle">{{ translations.tasks_page_subtitle }}</p>
+            </div>
+            <button id="add-task-btn" class="btn-add-task">
+                <i class="fas fa-plus"></i> {{ translations.add_task }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="tasks-filters-section">
+        <h3 class="filters-label">{{ translations.filters }}</h3>
+        <div class="filters-row">
+            <div class="filter-dropdown-wrapper">
+                <select id="filter-subject" class="filter-dropdown">
+                    <option value="">{{ translations.all_subjects }}</option>
+                    {% set subjects = [] %}
+                    {% for task in tasks %}
+                        {% if task.course and task.course not in subjects %}
+                            {% set _ = subjects.append(task.course) %}
+                            <option value="{{ task.course }}">{{ task.course }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-dropdown-wrapper">
+                <select id="filter-priority" class="filter-dropdown">
+                    <option value="">{{ translations.all_priorities }}</option>
+                    <option value="high">{{ translations.priority_high }}</option>
+                    <option value="medium">{{ translations.priority_medium }}</option>
+                    <option value="low">{{ translations.priority_low }}</option>
+                </select>
+            </div>
+            <div class="filter-dropdown-wrapper">
+                <select id="filter-status" class="filter-dropdown">
+                    <option value="">{{ translations.all_tasks }}</option>
+                    <option value="pending">{{ translations.status_todo }}</option>
+                    <option value="in_progress">{{ translations.status_in_progress }}</option>
+                    <option value="completed">{{ translations.status_completed }}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tasks List Section - Organized by Status -->
+    <div class="tasks-list-section">
+        <div class="tasks-list-header">
+            <h2 class="tasks-list-title">
+                {{ translations.all_tasks }} (<span id="total-tasks-count">{{ tasks|length }}</span>)
+            </h2>
+            <p class="tasks-list-subtitle">
+                <span id="active-tasks-count">{{ tasks|selectattr('status', 'ne', 'completed')|list|length }}</span> {{ translations.active }}, 
+                <span id="completed-tasks-count">{{ tasks|selectattr('status', 'equalto', 'completed')|list|length }}</span> {{ translations.completed }}
+            </p>
+        </div>
+
+        <!-- To-do Section (Pending Tasks) -->
+        {% set todo_tasks = tasks|selectattr('status', 'equalto', 'pending')|list %}
+        {% if todo_tasks|length > 0 %}
+        <div class="task-status-section" data-status="pending">
+            <h3 class="task-status-title">
+                <i class="fas fa-list-ul"></i> {{ translations.todo_list }}
+                <span class="task-count-badge">{{ todo_tasks|length }}</span>
+            </h3>
+            <div class="tasks-list" id="todo-tasks-list">
+                {% for task in todo_tasks %}
+                {% include 'task_card.html' %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Not-finished Section (In Progress Tasks) -->
+        {% set in_progress_tasks = tasks|selectattr('status', 'equalto', 'in_progress')|list %}
+        {% if in_progress_tasks|length > 0 %}
+        <div class="task-status-section" data-status="in_progress">
+            <h3 class="task-status-title">
+                <i class="fas fa-clock"></i> {{ translations.not_finished }}
+                <span class="task-count-badge">{{ in_progress_tasks|length }}</span>
+            </h3>
+            <div class="tasks-list" id="in-progress-tasks-list">
+                {% for task in in_progress_tasks %}
+                {% include 'task_card.html' %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Already-done Section (Completed Tasks) -->
+        {% set completed_tasks = tasks|selectattr('status', 'equalto', 'completed')|list %}
+        {% if completed_tasks|length > 0 %}
+        <div class="task-status-section" data-status="completed">
+            <h3 class="task-status-title">
+                <i class="fas fa-check-circle"></i> {{ translations.already_done }}
+                <span class="task-count-badge">{{ completed_tasks|length }}</span>
+            </h3>
+            <div class="tasks-list" id="completed-tasks-list">
+                {% for task in completed_tasks %}
+                {% include 'task_card.html' %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Empty State -->
+        {% if tasks|length == 0 %}
+        <div class="no-tasks-modern">
+            <i class="fas fa-tasks no-tasks-icon"></i>
+            <p>{{ translations.no_tasks_yet }}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Create/Edit Task Modal -->
+<div id="task-modal" class="modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title">{{ translations.create_task }}</h2>
+            <button id="close-modal" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="task-form">
+                <input type="hidden" id="task-id" name="task_id">
+
+                <div class="form-group">
+                    <label for="task-title">{{ translations.task_title }}</label>
+                    <input type="text" id="task-title" name="task_title" required placeholder="{{ translations.task_title_placeholder }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="task-description">{{ translations.description }}</label>
+                    <textarea id="task-description" name="task_description" rows="4" placeholder="{{ translations.description_placeholder }}"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="task-course">{{ translations.subject }}</label>
+                        <input type="text" id="task-course" name="task_course" placeholder="{{ translations.subject_placeholder }}">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="task-priority">{{ translations.priority }}</label>
+                        <select id="task-priority" name="task_priority">
+                            <option value="high">{{ translations.priority_high }}</option>
+                            <option value="medium" selected>{{ translations.priority_medium }}</option>
+                            <option value="low">{{ translations.priority_low }}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="task-due-date">{{ translations.due_date }}</label>
+                        <input type="date" id="task-due-date" name="task_due_date">
+                    </div>
+
+                    <div class="form-group half-width">
+                        <label for="task-estimated-time">{{ translations.estimated_time_minutes }}</label>
+                        <input type="number" id="task-estimated-time" name="task_estimated_time" min="1" placeholder="{{ translations.estimated_time_placeholder }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-status">{{ translations.status }}</label>
+                    <select id="task-status" name="task_status">
+                        <option value="pending">{{ translations.status_todo }}</option>
+                        <option value="in_progress">{{ translations.status_in_progress }}</option>
+                        <option value="completed">{{ translations.status_completed }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-repeat">{{ translations.repeat }}</label>
+                    <select id="task-repeat" name="task_repeat">
+                        <option value="">{{ translations.no_repeat }}</option>
+                        <option value="daily">{{ translations.daily }}</option>
+                        <option value="weekly">{{ translations.weekly }}</option>
+                        <option value="monthly">{{ translations.monthly }}</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-task-btn" class="btn btn-outline">{{ translations.cancel }}</button>
+            <button id="save-task-btn" class="btn btn-primary" type="submit">{{ translations.save_task }}</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    initTaskFormManagement();
+    initTaskFilters();
+    initTaskCheckboxes();
+    initTaskEditButtons();
+});
+
+// Initialize task form management
+function initTaskFormManagement() {
+    const modal = document.getElementById('task-modal');
+    const addTaskBtn = document.getElementById('add-task-btn');
+    const closeModalBtn = document.getElementById('close-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const taskForm = document.getElementById('task-form');
+    const dateInput = document.getElementById('task-due-date');
+
+    if (taskForm.hasAttribute('data-initialized')) {
+        return;
+    }
+    taskForm.setAttribute('data-initialized', 'true');
+
+    // Open modal for creating new task
+    addTaskBtn.addEventListener('click', function() {
+        modalTitle.textContent = window.TRANSLATIONS.create_task || 'Create Task';
+        taskForm.reset();
+        document.getElementById('task-id').value = '';
+        document.getElementById('task-status').value = 'pending';
+        if (dateInput) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+        modal.style.display = 'block';
+    });
+
+    // Close modal
+    closeModalBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    const saveTaskBtn = document.getElementById('save-task-btn');
+    const cancelTaskBtn = document.getElementById('cancel-task-btn');
+
+    cancelTaskBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    saveTaskBtn.addEventListener('click', function() {
+        taskForm.dispatchEvent(new Event('submit'));
+    });
+
+    // Submit form
+    taskForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const taskId = document.getElementById('task-id').value;
+        const taskTitle = document.getElementById('task-title').value;
+        const taskDueDate = document.getElementById('task-due-date').value;
+
+        if (!taskTitle) {
+            alert(window.TRANSLATIONS.task_title_required || 'Please enter a task title!');
+            return;
+        }
+
+        if (!taskDueDate) {
+            alert(window.TRANSLATIONS.task_due_date_required || 'Please select a due date!');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('task_id', taskId);
+        formData.append('task_title', taskTitle);
+        formData.append('task_description', document.getElementById('task-description').value);
+        formData.append('task_course', document.getElementById('task-course').value);
+        formData.append('task_priority', document.getElementById('task-priority').value);
+        formData.append('task_due_date', taskDueDate);
+        formData.append('task_repeat', document.getElementById('task-repeat').value);
+        formData.append('task_status', document.getElementById('task-status').value);
+
+        fetch('/tasks/add', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                modal.style.display = 'none';
+                window.location.reload();
+            } else {
+                alert(window.TRANSLATIONS.task_save_failed || 'Failed to save task. Please try again.');
+            }
+        }).catch(error => {
+            console.error('Error submitting task:', error);
+            alert(window.TRANSLATIONS.task_save_failed || 'Failed to save task. Please try again.');
+        });
+    });
+}
+
+// Initialize task edit buttons
+function initTaskEditButtons() {
+    // Use event delegation for dynamically added edit buttons
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.edit-btn-modern')) {
+            const button = event.target.closest('.edit-btn-modern');
+            const taskId = button.getAttribute('data-task-id');
+            editTask(taskId);
+        }
+    });
+}
+
+// Edit task function
+function editTask(taskId) {
+    console.log(`Editing task ${taskId}`);
+    
+    // Get task data from the task card - fix the selector
+    const editButton = document.querySelector(`.edit-btn-modern[data-task-id="${taskId}"]`);
+    if (!editButton) {
+        console.error('Edit button not found for task:', taskId);
+        return;
+    }
+    
+    const taskCard = editButton.closest('.task-card-modern');
+    if (!taskCard) {
+        console.error('Task card not found');
+        return;
+    }
+    
+    // Get task data from the card
+    const taskTitle = taskCard.querySelector('.task-title-modern').textContent.trim();
+    const taskSubject = taskCard.querySelector('.task-subject-modern')?.textContent.trim() || '';
+    const taskDueDateIso = taskCard.dataset.dueDateIso || '';
+    const taskPriority = taskCard.dataset.priority || 'medium';
+    const taskStatus = taskCard.dataset.status || 'pending';
+    
+    // Fill modal form with task data
+    const modal = document.getElementById('task-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const taskForm = document.getElementById('task-form');
+    
+    if (modal && modalTitle && taskForm) {
+        // Set modal title
+        modalTitle.textContent = window.TRANSLATIONS.edit_task || 'Edit Task';
+        
+        // Fill form data
+        document.getElementById('task-id').value = taskId;
+        document.getElementById('task-title').value = taskTitle;
+        document.getElementById('task-course').value = taskSubject;
+        document.getElementById('task-priority').value = taskPriority;
+        document.getElementById('task-status').value = taskStatus;
+        
+        // Use ISO due date directly (not locale strings)
+        document.getElementById('task-due-date').value = taskDueDateIso;
+        
+        // Show modal
+        modal.style.display = 'block';
+    }
+}
+
+// Initialize task filters
+function initTaskFilters() {
+    const subjectFilter = document.getElementById('filter-subject');
+    const priorityFilter = document.getElementById('filter-priority');
+    const statusFilter = document.getElementById('filter-status');
+
+    function filterTasks() {
+        const subject = subjectFilter.value.toLowerCase();
+        const priority = priorityFilter.value;
+        const status = statusFilter.value;
+
+        const taskSections = document.querySelectorAll('.task-status-section');
+        let totalVisible = 0;
+        let activeCount = 0;
+        let completedCount = 0;
+
+        taskSections.forEach(section => {
+            const sectionStatus = section.dataset.status;
+            const taskCards = section.querySelectorAll('.task-card-modern');
+            let sectionVisible = false;
+
+            taskCards.forEach(card => {
+                const cardSubject = (card.dataset.subject || '').toLowerCase();
+                const cardPriority = card.dataset.priority;
+                const cardStatus = card.dataset.status;
+
+                const matchesSubject = !subject || cardSubject.includes(subject);
+                const matchesPriority = !priority || cardPriority === priority;
+                const matchesStatus = !status || cardStatus === status;
+
+                if (matchesSubject && matchesPriority && matchesStatus) {
+                    card.style.display = 'flex';
+                    sectionVisible = true;
+                    totalVisible++;
+                    if (cardStatus !== 'completed') activeCount++;
+                    else completedCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show/hide section based on visible tasks
+            if (sectionVisible) {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+
+        document.getElementById('total-tasks-count').textContent = totalVisible;
+        document.getElementById('active-tasks-count').textContent = activeCount;
+        document.getElementById('completed-tasks-count').textContent = completedCount;
+    }
+
+    subjectFilter.addEventListener('change', filterTasks);
+    priorityFilter.addEventListener('change', filterTasks);
+    statusFilter.addEventListener('change', filterTasks);
+}
+
+// Initialize task checkboxes
+function initTaskCheckboxes() {
+    // Use event delegation for dynamically added checkboxes
+    document.addEventListener('change', function(event) {
+        if (event.target.classList.contains('task-checkbox-modern')) {
+            const checkbox = event.target;
+            const taskId = checkbox.getAttribute('data-task-id');
+            const newStatus = checkbox.checked ? 'completed' : 'pending';
+
+            fetch(`/tasks/update_status/${taskId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert(data.message || window.TRANSLATIONS.task_status_update_failed || 'Failed to update task status.');
+                    checkbox.checked = !checkbox.checked;
+                }
+            })
+            .catch(error => {
+                console.error('Error updating task status:', error);
+                alert(window.TRANSLATIONS.task_status_update_failed || 'Failed to update task status. Please try again.');
+                checkbox.checked = !checkbox.checked;
+            });
+        }
+    });
+}
+</script>
+{% endblock %}

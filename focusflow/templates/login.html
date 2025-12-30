@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>{{ translations.login }}</h2>
+        <form method="POST" action="{{ url_for('login', lang=lang) }}">
+            <div class="form-group">
+                <label for="phone">{{ translations.phone }}</label>
+                <input type="tel" id="phone" name="phone" required placeholder="{{ translations.phone_placeholder }}">
+            </div>
+            <div class="form-group">
+                <label for="password">{{ translations.password }}</label>
+                <input type="password" id="password" name="password" required placeholder="{{ translations.password_placeholder }}">
+            </div>
+            <div class="form-group">
+                <label for="captcha">{{ captcha_question }}</label>
+                <input type="text" id="captcha" name="captcha" required placeholder="{{ translations.captcha_placeholder }}">
+            </div>
+            <button type="submit" class="btn">{{ translations.login }}</button>
+        </form>
+        <div class="auth-links">
+            <a href="{{ url_for('register', lang=lang) }}">{{ translations.register }}</a>
+            <a href="{{ url_for('forgot_password', lang=lang) }}">{{ translations.forgot_password }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
