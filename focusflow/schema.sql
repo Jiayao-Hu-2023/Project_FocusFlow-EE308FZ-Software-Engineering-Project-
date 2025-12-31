@@ -36,6 +36,7 @@ CREATE TABLE tasks (
     status TEXT DEFAULT 'pending', -- pending, in_progress, completed
     due_date TEXT,
     repeat TEXT, -- daily, weekly, monthly
+    estimated_time INTEGER DEFAULT 60, -- 添加预计时间字段，默认60分钟
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
