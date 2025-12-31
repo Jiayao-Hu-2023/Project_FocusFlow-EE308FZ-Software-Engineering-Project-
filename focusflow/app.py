@@ -9,7 +9,7 @@ from functools import wraps
 from config import Config
 from werkzeug.utils import secure_filename
 import uuid
-     
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 app.config['DATABASE'] = os.path.join(app.root_path, 'focusflow.db')
@@ -64,7 +64,8 @@ def init_db():
     print("[调试] 初始化数据库...")
     try:
         conn = get_db_connection()
-        with app.open_resource('schema.sql', mode='r') as f:
+        schema_path = os.path.join(os.path.dirname(__file__), 'schema.sql')
+        with open(schema_path, 'r', encoding='utf-8') as f:
             conn.executescript(f.read())
         conn.commit()
         print("[调试] 数据库初始化成功")
@@ -2538,9 +2539,8 @@ def tasks():
                 except Exception:
                     task_dict['due_date_display'] = task_dict['due_date']
             
-            # Calculate estimated time (default to 60 minutes if not set)
-            # You can add an estimated_time field to the database later
-            task_dict['estimated_time'] = 60  # Default value
+            # 使用数据库中的estimated_time值，而不是硬编码的默认值
+            task_dict['estimated_time'] = task_dict.get('estimated_time', 60)  # 从数据库获取，如果没有则使用默认值60
             
             tasks_with_tags.append(task_dict)
 
@@ -2551,7 +2551,6 @@ def tasks():
         conn.close()
 
     return render_template('tasks.html', translations=translations, lang=lang, tasks=tasks_with_tags)
-
 
 # 路由：创建/编辑任务
 @app.route('/tasks/add', methods=['POST'])
@@ -2573,12 +2572,14 @@ def add_task():
     repeat = request.form.get('task_repeat', '')
     tags = request.form.get('task_tags', '')
     status = request.form.get('task_status', 'pending')
+    estimated_time = request.form.get('task_estimated_time', 60)  # 添加预计时间字段
 
     # 添加详细的日志记录
     print(f"\n[调试] 任务请求参数:")
     print(f"[调试] task_id: {task_id}, user_id: {user_id}")
     print(f"[调试] title: {title}, course: {course}")
     print(f"[调试] due_date: {due_date}, priority: {priority}")
+    print(f"[调试] estimated_time: {estimated_time}")  # 添加预计时间日志
 
     # 服务器端验证 - 验证必填字段
     if not title:
@@ -2590,6 +2591,14 @@ def add_task():
         print("[调试] 截止日期为空，返回错误")
         flash(translations.get('task_due_date_required', 'Please select a due date!'))
         return redirect(url_for('tasks', lang=lang))
+
+    # 验证预计时间，确保是正整数
+    try:
+        estimated_time = int(estimated_time)
+        if estimated_time <= 0:
+            estimated_time = 60  # 如果小于等于0，设置为默认值60
+    except (ValueError, TypeError):
+        estimated_time = 60  # 如果转换失败，设置为默认值60
 
     conn = None
     try:
@@ -2611,9 +2620,9 @@ def add_task():
             conn.execute('''
                 UPDATE tasks 
                 SET title = ?, description = ?, course = ?, priority = ?, 
-                    due_date = ?, repeat = ?, status = ?, updated_at = CURRENT_TIMESTAMP 
+                    due_date = ?, repeat = ?, status = ?, estimated_time = ?, updated_at = CURRENT_TIMESTAMP 
                 WHERE id = ? 
-            ''', (title, description, course, priority, due_date, repeat, status, task_id))
+            ''', (title, description, course, priority, due_date, repeat, status, estimated_time, task_id))
             print("[调试] 任务更新成功")
 
             # 删除旧标签
@@ -2625,9 +2634,9 @@ def add_task():
             print("[调试] 插入任务到tasks表")
             cursor = conn.cursor()  # 这里使用cursor是为了获取lastrowid
             cursor.execute('''
-                INSERT INTO tasks (user_id, title, description, course, priority, due_date, repeat, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (user_id, title, description, course, priority, due_date, repeat, status))
+                INSERT INTO tasks (user_id, title, description, course, priority, due_date, repeat, status, estimated_time)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (user_id, title, description, course, priority, due_date, repeat, status, estimated_time))
 
             # 获取新插入任务的ID
             task_id = cursor.lastrowid
