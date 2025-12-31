@@ -259,33 +259,39 @@ function initTaskFormManagement() {
     });
 
     // Submit form
-    taskForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+taskForm.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        const taskId = document.getElementById('task-id').value;
-        const taskTitle = document.getElementById('task-title').value;
-        const taskDueDate = document.getElementById('task-due-date').value;
+    const taskId = document.getElementById('task-id').value;
+    const taskTitle = document.getElementById('task-title').value;
+    const taskDueDate = document.getElementById('task-due-date').value;
+    const taskEstimatedTime = document.getElementById('task-estimated-time').value; // 获取预计时间
 
-        if (!taskTitle) {
-            alert(window.TRANSLATIONS.task_title_required || 'Please enter a task title!');
-            return;
-        }
+    if (!taskTitle) {
+        alert(window.TRANSLATIONS.task_title_required || 'Please enter a task title!');
+        return;
+    }
 
-        if (!taskDueDate) {
-            alert(window.TRANSLATIONS.task_due_date_required || 'Please select a due date!');
-            return;
-        }
+    if (!taskDueDate) {
+        alert(window.TRANSLATIONS.task_due_date_required || 'Please select a due date!');
+        return;
+    }
 
-        const formData = new FormData();
-        formData.append('task_id', taskId);
-        formData.append('task_title', taskTitle);
-        formData.append('task_description', document.getElementById('task-description').value);
-        formData.append('task_course', document.getElementById('task-course').value);
-        formData.append('task_priority', document.getElementById('task-priority').value);
-        formData.append('task_due_date', taskDueDate);
-        formData.append('task_repeat', document.getElementById('task-repeat').value);
-        formData.append('task_status', document.getElementById('task-status').value);
+    // 验证预计时间
+    if (!taskEstimatedTime || taskEstimatedTime <= 0) {
+        alert(window.TRANSLATIONS.estimated_time_required || 'Please enter a valid estimated time!');
+        return;
+    }
 
+    const formData = new FormData();
+    formData.append('task_id', taskId);
+    formData.append('task_title', taskTitle);
+    formData.append('task_description', document.getElementById('task-description').value);
+    formData.append('task_course', document.getElementById('task-course').value);
+    formData.append('task_priority', document.getElementById('task-priority').value);
+    formData.append('task_due_date', taskDueDate);
+    formData.append('task_estimated_time', taskEstimatedTime); // 添加预计时间
+    formData.append('task_repeat', document.getElementById('task-repeat').value);
         fetch('/tasks/add', {
             method: 'POST',
             body: formData
@@ -333,30 +339,32 @@ function editTask(taskId) {
     }
     
     // Get task data from the card
-    const taskTitle = taskCard.querySelector('.task-title-modern').textContent.trim();
-    const taskSubject = taskCard.querySelector('.task-subject-modern')?.textContent.trim() || '';
-    const taskDueDateIso = taskCard.dataset.dueDateIso || '';
-    const taskPriority = taskCard.dataset.priority || 'medium';
-    const taskStatus = taskCard.dataset.status || 'pending';
+const taskTitle = taskCard.querySelector('.task-title-modern').textContent.trim();
+const taskSubject = taskCard.querySelector('.task-subject-modern')?.textContent.trim() || '';
+const taskDueDateIso = taskCard.dataset.dueDateIso || '';
+const taskPriority = taskCard.dataset.priority || 'medium';
+const taskStatus = taskCard.dataset.status || 'pending';
+const taskEstimatedTime = taskCard.dataset.estimatedTime || ''; // 获取预计时间
+
+// Fill modal form with task data
+const modal = document.getElementById('task-modal');
+const modalTitle = document.getElementById('modal-title');
+const taskForm = document.getElementById('task-form');
+
+if (modal && modalTitle && taskForm) {
+    // Set modal title
+    modalTitle.textContent = window.TRANSLATIONS.edit_task || 'Edit Task';
     
-    // Fill modal form with task data
-    const modal = document.getElementById('task-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const taskForm = document.getElementById('task-form');
+    // Fill form data
+    document.getElementById('task-id').value = taskId;
+    document.getElementById('task-title').value = taskTitle;
+    document.getElementById('task-course').value = taskSubject;
+    document.getElementById('task-priority').value = taskPriority;
+    document.getElementById('task-status').value = taskStatus;
+    document.getElementById('task-estimated-time').value = taskEstimatedTime; // 填充预计时间
     
-    if (modal && modalTitle && taskForm) {
-        // Set modal title
-        modalTitle.textContent = window.TRANSLATIONS.edit_task || 'Edit Task';
-        
-        // Fill form data
-        document.getElementById('task-id').value = taskId;
-        document.getElementById('task-title').value = taskTitle;
-        document.getElementById('task-course').value = taskSubject;
-        document.getElementById('task-priority').value = taskPriority;
-        document.getElementById('task-status').value = taskStatus;
-        
-        // Use ISO due date directly (not locale strings)
-        document.getElementById('task-due-date').value = taskDueDateIso;
+    // Use ISO due date directly (not locale strings)
+    document.getElementById('task-due-date').value = taskDueDateIso;
         
         // Show modal
         modal.style.display = 'block';
