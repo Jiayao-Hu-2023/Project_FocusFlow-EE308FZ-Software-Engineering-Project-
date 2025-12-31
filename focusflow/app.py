@@ -9,7 +9,7 @@ from functools import wraps
 from config import Config
 from werkzeug.utils import secure_filename
 import uuid
-
+     
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 app.config['DATABASE'] = os.path.join(app.root_path, 'focusflow.db')
