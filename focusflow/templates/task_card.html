@@ -1,0 +1,74 @@
+<div class="task-card-modern" 
+     data-subject="{{ task.course or '' }}" 
+     data-priority="{{ task.priority }}" 
+     data-status="{{ task.status }}"
+     data-due-date-iso="{{ task.due_date_iso or '' }}"
+     data-task-id="{{ task.id }}"
+     data-estimated-time="{{ task.estimated_time }}">
+
+    <!-- Card Header: Checkbox and Title -->
+    <div class="task-card-header">
+        <input type="checkbox"
+               class="task-checkbox-modern"
+               data-task-id="{{ task.id }}"
+               {% if task.status == 'completed' %}checked{% endif %}>
+
+        <h3 class="task-title-modern {% if task.status == 'completed' %}completed{% endif %}">
+            {{ task.title }}
+        </h3>
+    </div>
+
+    <!-- Task Description -->
+    {% if task.description %}
+    <div class="task-description-modern">
+        {{ task.description }}
+    </div>
+    {% endif %}
+
+    <!-- Task Details - Stacked Layout -->
+    <div class="task-details-modern">
+        {% if task.course %}
+        <div class="task-detail-item">
+            <i class="fas fa-book"></i>
+            <span class="task-subject-modern">{{ task.course }}</span>
+        </div>
+        {% endif %}
+
+        {% if task.due_date_display %}
+        <div class="task-detail-item">
+            <i class="far fa-calendar"></i>
+            <span class="task-due-date-modern 
+                {% if task.due_days_diff == 0 %}due-today{% elif task.due_days_diff == 1 %}due-tomorrow{% endif %}">
+                {{ task.due_date_display }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if task.estimated_time %}
+        <div class="task-detail-item">
+            <i class="far fa-clock"></i>
+            <span class="task-time-modern">
+                {{ task.estimated_time }} {{ translations['min'] }}
+            </span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Task Actions - Bottom Section -->
+    <div class="task-actions-modern">
+        {% if task.priority %}
+        <span class="priority-tag-modern priority-{{ task.priority }}">
+            {{ translations['priority_' ~ task.priority] if ('priority_' ~ task.priority) in translations else task.priority|title }}
+        </span>
+        {% endif %}
+
+        <div class="action-buttons">
+            <button class="edit-btn-modern" data-task-id="{{ task.id }}" title="{{ translations.edit }}">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn-modern" data-task-id="{{ task.id }}" title="{{ translations.delete }}">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
