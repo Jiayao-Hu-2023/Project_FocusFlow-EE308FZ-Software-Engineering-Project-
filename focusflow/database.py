@@ -83,19 +83,18 @@ class TaskDB:
         task = conn.execute('SELECT * FROM tasks WHERE id = ?', (task_id,)).fetchone()
         conn.close()
         return task
-    
     @staticmethod
     def create_task(task_data):
         conn = get_db_connection()
         conn.execute('''
             INSERT INTO tasks (user_id, title, description, course, priority, status, 
-                             due_date, repeat)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                             due_date, repeat, estimated_time)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             task_data['user_id'], task_data['title'], task_data.get('description', ''),
             task_data.get('course', ''), task_data.get('priority', 'medium'),
             task_data.get('status', 'pending'), task_data.get('due_date', ''),
-            task_data.get('repeat', '')
+            task_data.get('repeat', ''), task_data.get('estimated_time', 60)
         ))
         conn.commit()
         task_id = conn.execute('SELECT last_insert_rowid()').fetchone()[0]
