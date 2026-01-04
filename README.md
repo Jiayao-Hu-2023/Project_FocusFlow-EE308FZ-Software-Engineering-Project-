@@ -1,250 +1,219 @@
 # FocusFlow - Focus Learning & Time Management System
 
 ## 📚 Project Overview
-FocusFlow is a Flask-based focus learning and time management system designed to help users improve learning efficiency and develop good study habits. By combining the Pomodoro technique with task management functionality, FocusFlow provides a comprehensive solution for enhancing learning productivity.
+FocusFlow is a comprehensive Flask-based web application designed to help users improve learning efficiency and develop productive study habits. The system combines task management with focus timer functionality using the Pomodoro technique, providing a complete solution for effective time management and learning optimization.
 
-## ✨ Key Features
+## ✨ Core Features
 
-### 👤 User Account System
-- Registration, login, and password reset functionality
-- Personal profile management (edit information, change password)
-- Learning preference settings
+### 👤 User Management System
+- User registration and authentication with secure password hashing
+- Profile management with personal information and avatar upload
+- Multi-language support (English/Chinese)
+- Daily check-in system with streak tracking
 
-### 📝 Task Management
-- Create, edit, and delete learning tasks
-- Set task priority and due dates
-- Task categorization and organization
-- Task completion status tracking
+### 📝 Advanced Task Management
+- Create, edit, and organize learning tasks with priorities
+- Set due dates and track completion status
+- Task categorization and filtering capabilities
+- Visual task progress indicators
 
-### ⏱️ Focus Mode
-- Pomodoro technique timer implementation
-- Customizable focus and break durations
-- Focus session recording and statistics
-- Visual distraction minimization during focus sessions
+### ⏱️ Intelligent Focus Timer
+- Pomodoro technique implementation with customizable intervals
+- Focus session tracking and statistics
+- Break management with automatic transitions
+- Task association for focused work sessions
 
-### 📊 Statistics & Analytics
-- Learning data visualization
-- Daily/weekly/monthly focus time statistics
-- Task completion rate analysis
-- Personalized learning recommendations
-- Continuous learning streak tracking
+### 📊 Learning Analytics Dashboard
+- Visual statistics for focus time and task completion
+- Daily, weekly, and monthly progress tracking
+- Learning streak visualization
+- Personalized insights and recommendations
 
-### 🌐 Internationalization Support
-- Bilingual interface (English/Chinese)
-- Multi-language content translation
-
-### 🎨 User Experience Optimization
-- Responsive design for various screen sizes
-- Dark/light mode theme switching
-- Intuitive and user-friendly interface
+### 🎨 User Experience Features
+- Responsive design for desktop and mobile devices
+- Dark/light theme support
+- Intuitive navigation and clean interface
+- Real-time notifications and feedback
 
 ## 🛠️ Technology Stack
 
-### Backend
-- Python 3.12
-- Flask 3.1.2 - Web framework
-- SQLite3 - Lightweight database
-- Flask-CORS 6.0.1 - Cross-origin resource sharing
+### Backend Development
+- **Python 3.12** - Core programming language
+- **Flask 3.1.2** - Lightweight web framework
+- **SQLite3** - Embedded database for data persistence
+- **Flask-Bcrypt** - Secure password hashing
+- **Werkzeug** - WSGI utilities and development server
 
-### Frontend
-- HTML5, CSS3, JavaScript ES6+
-- Bootstrap 5 - Responsive UI framework
-- Font Awesome - Icon library
-- Chart.js - Data visualization
+### Frontend Development
+- **HTML5** - Semantic markup structure
+- **CSS3** - Responsive styling and animations
+- **JavaScript ES6+** - Interactive functionality
+- **Bootstrap** - UI components and grid system
+- **Chart.js** - Data visualization for statistics
 
-## 🚀 Installation & Setup
+## 🚀 Quick Start Guide
 
 ### Prerequisites
 - Python 3.8 or higher
 - pip package manager
-- Browser support: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
 ### Installation Steps
 
-#### 1. Clone the project (or use existing files)
+1. **Navigate to Project Directory**
+   ```bash
+   cd focusflow
+   ```
 
-#### 2. Create and activate virtual environment
-If you are using Windows, enter the command prompt in the terminal:
-```bash
-# Windows
-python -m venv .venv
-.venv\Scripts\activate
-```
+2. **Set Up Virtual Environment**
+   ```bash
+   # Windows
+   python -m venv .venv
+   .venv\Scripts\activate
+   
+   # macOS/Linux
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
 
-If you are using macOS or Linux, enter the command prompt in the terminal:
-```bash
-# macOS/Linux
-source .venv/bin/activate
-```
+3. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-#### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+4. **Initialize Database**
+   ```bash
+   python setup.py
+   ```
 
-#### 4. Initialize database
-```bash
-cd focusflow
-python setup.py
-```
+5. **Launch Application**
+   ```bash
+   # Development server
+   flask run
+   
+   # Alternative: Direct Python execution
+   python app.py
+   ```
 
-#### 5. Compile translation files (optional)
-```bash
-# To update or add new translations
-pybabel compile -d translations
-```
-
-#### 6. Run the application
-```bash
-# Development mode
-flask run
-
-# Or using WSGI entry point
-python wsgi.py
-```
-
-The application will start at http://127.0.0.1:5000
-
-## 📋 User Guide
-
-### First-time Usage
-1. Visit http://127.0.0.1:5000 to open the application
-2. Click "Register" to create a new account
-3. Log in using your registered credentials
-
-### Core Features Usage
-
-#### Task Management
-1. Click "Task Management" in the left navigation bar
-2. Click "Add New Task" to create a learning task
-3. Fill in task title, description, priority, etc.
-4. Click "Save" to complete task creation
-5. Edit or delete tasks from the task list
-
-#### Focus Mode
-1. Click "Focus Mode" in the left navigation bar
-2. Select a task to focus on (optional)
-3. Set focus duration and break duration
-4. Click "Start" to begin the focus timer
-5. Automatically switches to break mode after focus session
-
-#### Statistics & Analytics
-1. Click "Statistics & Analytics" in the left navigation bar
-2. View learning statistics and visual charts
-3. Select different time periods for statistics
-4. Read personalized learning recommendations
-
-#### Personal Center
-1. Click "Personal Center" in the left navigation bar
-2. Edit personal information and learning goals
-3. Change account password
-4. Set language preferences and theme mode
+6. **Access Application**
+   Open your browser and navigate to: `http://127.0.0.1:5000`
 
 ## 📁 Project Structure
 ```
 focusflow/
-├── app.py                 # Main application entry and route definitions
-├── config.py              # Application configuration
-├── models.py              # Data model definitions
-├── database.py            # Database operations
-├── schema.sql             # Database table structure
-├── setup.py               # Project initialization script
-├── wsgi.py                # WSGI server entry point
-├── static/                # Static resource files
-│   ├── css/               # Stylesheets
-│   │   └── style.css      # Main stylesheet
-│   ├── js/                # JavaScript scripts
-│   │   ├── focus_timer.js # Focus timer implementation
-│   │   └── main.js        # Common script functions
-│   └── sounds/            # Audio files (notification sounds)
-├── templates/             # HTML template files
-│   ├── base.html          # Base template
-│   ├── dashboard.html     # User dashboard
-│   ├── focus_session.html # Focus mode page
-│   ├── forgot_password.html # Forgot password page
-│   ├── login.html         # Login page
-│   ├── profile.html       # Personal center page
-│   ├── register.html      # Registration page
-│   ├── stats.html         # Statistics page
-│   └── tasks.html         # Task management page
-├── translations/          # Multi-language translation files
-│   └── zh/                # Chinese translations
-│       └── LC_MESSAGES/   # Message catalog
-│           └── messages.po # Translation file
-└── utils/                 # Utility functions
-    ├── auth.py            # Authentication functions
-    └── helpers.py         # Helper functions
+├── app.py                 # Main Flask application with routes
+├── config.py             # Application configuration settings
+├── models.py             # Data models and database schema
+├── database.py           # Database connection utilities
+├── setup.py              # Database initialization script
+├── wsgi.py               # WSGI entry point for production
+├── requirements.txt      # Python dependencies
+├── schema.sql            # Database table definitions
+├── focusflow.db          # SQLite database file (auto-generated)
+│
+├── static/               # Static assets
+│   ├── css/
+│   │   └── style.css     # Main stylesheet
+│   ├── js/
+│   │   ├── focus_timer.js # Pomodoro timer functionality
+│   │   └── main.js       # Common JavaScript utilities
+│   └── uploads/
+│       └── avatars/      # User profile pictures
+│
+├── templates/            # HTML templates
+│   ├── base.html         # Base template with navigation
+│   ├── dashboard.html    # User dashboard
+│   ├── login.html        # Authentication page
+│   ├── register.html     # User registration
+│   ├── profile.html      # Profile management
+│   ├── tasks.html        # Task management interface
+│   ├── focus.html        # Focus timer interface
+│   ├── stats.html        # Statistics dashboard
+│   └── forgot_password.html # Password recovery
+│
+└── utils/                # Utility modules
+    ├── auth.py           # Authentication helpers
+    └── helpers.py        # Common utility functions
 ```
 
-## 🔧 Testing Guide
+## 🔧 Development Guide
 
-### Functional Testing
+### Database Operations
+The application uses SQLite with the following main tables:
+- `users` - User account information
+- `tasks` - Learning tasks and assignments
+- `focus_sessions` - Focus time tracking
+- `checkins` - Daily check-in records
 
-#### 1. User Authentication Testing
-- **Registration Test**: Visit `/register` page, fill in registration info and submit, verify successful registration and auto-login
-- **Login Test**: Visit `/login` page, use valid/invalid credentials, verify login logic
-- **Password Reset**: Visit `/forgot_password` page, test password reset flow
+### Adding New Features
+1. Define new routes in `app.py`
+2. Create corresponding template in `templates/`
+3. Add necessary database modifications in `models.py`
+4. Update static assets if needed
 
-#### 2. Task Management Testing
-- **Create Tasks**: Create tasks with different priorities and due dates on `/tasks` page
-- **Edit Tasks**: Modify existing task information, verify updates
-- **Delete Tasks**: Delete tasks and confirm removal from list
-- **Task Status**: Mark tasks as complete/incomplete, check status changes
-
-#### 3. Focus Mode Testing
-- **Timer Function**: Set different durations, test timer accuracy
-- **Pause/Resume**: Test pause and resume timer functionality
-- **Task Association**: Select tasks for focus, verify focus time correctly associated
-- **Break Mode**: Test automatic switch to break mode after focus session
-
-#### 4. Statistics Testing
-- **Data Display**: View statistics for different time periods on `/stats` page
-- **Chart Display**: Verify various charts correctly display learning data
-
-### Performance Testing
-- Simulate multiple concurrent user operations
-- Test page loading speed with large task datasets
-- Verify stability during long focus mode sessions
-
-### Development Environment Test Commands
-
+### Testing the Application
 ```bash
-# Run unit tests (if implemented)
-python -m unittest discover
+# Run the development server
+flask run --debug
 
-# Code quality check
-flake8 .
-
-# Static type checking (if using type annotations)
-mypy .
+# Test database operations
+python -c "from app import init_db; init_db()"
 ```
 
-## 🚧 Troubleshooting
+## 🐛 Troubleshooting
 
-### 1. Database Connection Error
-- Ensure `python setup.py` has been run to initialize database
-- Check database file permissions
+### Common Issues
 
-### 2. Dependency Installation Failure
-- Update pip to latest version: `pip install --upgrade pip`
+**Database Connection Errors**
+- Ensure `focusflow.db` file exists and has proper permissions
+- Run `python setup.py` to recreate database if needed
+
+**Dependency Installation Issues**
+- Update pip: `pip install --upgrade pip`
 - Verify Python version compatibility
 
-### 3. Application Won't Start
-- Check if port is occupied, use `flask run --port=5001` to change port
-- Check console error messages for troubleshooting
+**Application Startup Problems**
+- Check if port 5000 is available
+- Verify all dependencies are installed correctly
+- Check console for specific error messages
 
-### 4. Language Display Issues
-- Ensure translation files are properly compiled: `pybabel compile -d translations`
-- Check browser language settings
+**File Upload Issues**
+- Ensure `static/uploads/avatars` directory exists
+- Verify file size limits (5MB maximum)
+- Check allowed file types: PNG, JPG, JPEG, GIF, WebP
 
-## 📜 License
-MIT License
+## 📝 Usage Guide
+
+### Getting Started
+1. Register a new account or login with existing credentials
+2. Set up your profile with personal information
+3. Create your first learning task in the task management section
+
+### Daily Workflow
+1. **Morning Check-in**: Start your day by checking in on the dashboard
+2. **Task Planning**: Review and organize your daily tasks
+3. **Focus Sessions**: Use the focus timer for productive work periods
+4. **Progress Tracking**: Monitor your statistics and adjust goals
+
+### Advanced Features
+- **Task Prioritization**: Use high/medium/low priorities to organize work
+- **Focus Session Customization**: Adjust timer durations to match your workflow
+- **Multi-language Support**: Switch between English and Chinese interfaces
+- **Profile Customization**: Upload avatars and personalize your account
 
 ## 🤝 Contributing
-We welcome issues and pull requests to improve the FocusFlow project.
+We welcome contributions to improve FocusFlow! Please follow these steps:
 
-## 📞 Contact
-For any questions or suggestions, please contact the project maintainer.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with proper testing
+4. Submit a pull request with detailed description
+
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 📞 Support
+For technical support or feature requests, please contact the development team or create an issue in the project repository.
 
 ---
-Last Updated: 12/26/2025
+*Last Updated: 1/6/2025*
